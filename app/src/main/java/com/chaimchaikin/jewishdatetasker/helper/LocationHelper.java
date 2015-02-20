@@ -11,15 +11,21 @@ import android.os.Bundle;
 
 import com.chaimchaikin.jewishdatetasker.TimeZoneMapper;
 
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 /**
  * Created by Chaim on 2015-01-02.
+ *
+ * LocationHelper
+ *
+ * Starts a location service and gets location information on update of current location
+ *
  */
 public class LocationHelper implements LocationListener {
+
+    boolean locationUpdatesRequested;
 
     private LocationManager locationManager;
     private String provider;
@@ -56,22 +62,30 @@ public class LocationHelper implements LocationListener {
 
     public void updateLocation() {
         // Register the listener with the Location Manager to receive location updates
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 200, 10, LocationHelper.this);
+
+        locationUpdatesRequested = true;
     }
 
     public void requestLocationUpdates() {
+        locationUpdatesRequested = true;
         locationManager.requestLocationUpdates(provider, 400, 1, this);
     }
 
     public void removeUpdates() {
-        locationManager.removeUpdates(this);
+
+        if(locationUpdatesRequested) {
+            locationManager.removeUpdates(this);
+            locationUpdatesRequested = false;
+        }
+
     }
 
     public void getTimezone() {
         TimeZoneMapper timeZoneMapper = new TimeZoneMapper();
         timezone = timeZoneMapper.latLngToTimezoneString(lat, lng);
-
     }
+
 
     @Override
     public void onLocationChanged(Location location) {
