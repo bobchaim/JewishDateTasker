@@ -33,7 +33,6 @@ public class LocationHelper implements LocationListener {
     public String locationName, timezone;
     public Double lat, lng;
 
-    private Location globalLocation;
 
     public Context mContext;
 
@@ -62,15 +61,17 @@ public class LocationHelper implements LocationListener {
 
     public void updateLocation() {
         // Register the listener with the Location Manager to receive location updates
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 200, 10, LocationHelper.this);
+        locationManager.requestLocationUpdates(provider, 300, 10, LocationHelper.this);
 
         locationUpdatesRequested = true;
     }
 
+    /*
     public void requestLocationUpdates() {
         locationUpdatesRequested = true;
         locationManager.requestLocationUpdates(provider, 400, 1, this);
     }
+    */
 
     public void removeUpdates() {
 
@@ -82,15 +83,14 @@ public class LocationHelper implements LocationListener {
     }
 
     public void getTimezone() {
-        TimeZoneMapper timeZoneMapper = new TimeZoneMapper();
-        timezone = timeZoneMapper.latLngToTimezoneString(lat, lng);
+        timezone = TimeZoneMapper.latLngToTimezoneString(lat, lng);
     }
 
 
     @Override
     public void onLocationChanged(Location location) {
-        lat = (double) (location.getLatitude());
-        lng = (double) (location.getLongitude());
+        lat = location.getLatitude();
+        lng = location.getLongitude();
 
 
         getTimezone();
@@ -117,7 +117,7 @@ public class LocationHelper implements LocationListener {
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
+
 
     }
 
