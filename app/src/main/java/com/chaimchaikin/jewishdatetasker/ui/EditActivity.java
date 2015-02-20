@@ -15,6 +15,7 @@ package com.chaimchaikin.jewishdatetasker.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,12 +23,12 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.chaimchaikin.jewishdatetasker.LocationPoint;
-import com.chaimchaikin.jewishdatetasker.helper.LocationHelper;
 import com.chaimchaikin.jewishdatetasker.R;
-import com.chaimchaikin.jewishdatetasker.helper.TaskerPlugin;
 import com.chaimchaikin.jewishdatetasker.TimeZoneMapper;
 import com.chaimchaikin.jewishdatetasker.bundle.BundleScrubber;
 import com.chaimchaikin.jewishdatetasker.bundle.PluginBundleManager;
+import com.chaimchaikin.jewishdatetasker.helper.LocationHelper;
+import com.chaimchaikin.jewishdatetasker.helper.TaskerPlugin;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
@@ -47,7 +48,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public final class EditActivity extends AbstractPluginActivity
 {
-    /***
+    /**
      *  Global variables
      */
 
@@ -70,10 +71,10 @@ public final class EditActivity extends AbstractPluginActivity
     // Location request activity
     int CHOOSE_LOCATION_REQUEST = 1;
 
-    /***
+    /**
      * Called on creating activity
      * - Loads settings from intent bundle if necessary
-     * - Makes a location helper for later use (TODO: move location helper entirely to updateLocation() method)
+     * - Makes a location helper for later use
      *
      * @param savedInstanceState if a saved instance of this activity exists already
      */
@@ -88,16 +89,14 @@ public final class EditActivity extends AbstractPluginActivity
         final Bundle localeBundle = getIntent().getBundleExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE);
         BundleScrubber.scrub(localeBundle);
 
+        // Create a new location helper
+        locHelper = new LocationHelper(this);
+
         // Set the correct view
         setContentView(R.layout.activity_settings);
 
         // Set this to the TextView where we show the user the current location
         locationNameTextView = (TextView) findViewById(R.id.LocationName);
-
-        // Start a location helper to find the current location (pass the current context)
-        locHelper = new LocationHelper(this);
-        // Set the location TextView to the current location
-        locationNameTextView.setText(locHelper.locationName);
 
         // Make sure the "use current location" and "choose location" buttons are correctly enabled/disabled
         updateLocationButton();
@@ -131,21 +130,19 @@ public final class EditActivity extends AbstractPluginActivity
 
 
             } else {
-                // Otherwise display a finding location
-                locationNameTextView.setText("Finding location...");
-
-                // And update the location to the current location
-                updateLocation();
-
                 // Location defaults as not automatic
                 // (The 'true' argument tells the method to also clear the check)
                 setAutoLocation(false, true);
+
+                // Update the location to the current location
+                updateLocation();
+
             }
 
         }
     }
 
-    /***
+    /**
      * User presses button to select a new location
      * - Launch map activity (pass current settings location)
      *
@@ -187,6 +184,9 @@ public final class EditActivity extends AbstractPluginActivity
         // If the request went well (OK) and the request was CHOOSE_LOCATION_REQUEST
         if (resultCode == Activity.RESULT_OK && requestCode == CHOOSE_LOCATION_REQUEST) {
 
+            // Stop requesting location updates for current location
+            locHelper.removeUpdates();
+
             // Get lat/lng from chosen location
             double lat = data.getDoubleExtra("lat", 0);
             double lng = data.getDoubleExtra("lng", 0);
@@ -212,7 +212,7 @@ public final class EditActivity extends AbstractPluginActivity
         }
     }
 
-    /***
+    /**
      * Sets the "use current location" button to be enabled or disabled based on whether a custom location is selected
      */
     public void updateLocationButton() {
@@ -221,45 +221,61 @@ public final class EditActivity extends AbstractPluginActivity
         button.setEnabled(customLocationSet);
     }
 
-    /***
+    /**
      * When the use current location button is pressed in the ui
      * - Turn off auto location
-     * - Find updated location (TODO: move entire location finding stuff to here)
+     * - Find updated location
      * - Update ui (custom location not set)
      *
      * @param view  button that was pressed
      */
     public void useCurrentLocation(View view) {
+
         // Turn off auto location (should be impossible to press this if auto location is on, but just in case)
         setAutoLocation(false, true);
 
         // Update the location to current location
         updateLocation();
-
-        // Set the custom location to be off
-        customLocationSet = false;
-        updateLocationButton();
     }
 
-    /***
+    /**
      * Update location to current location
      * - Update the location in the helper
      * - Update ui (location name changed)
      * - Set the settings for the new (current) location
      */
     public void updateLocation() {
-        // Get the current location from the location helper
 
-        // First find updated location
+        // Set the custom location to be off
+        customLocationSet = false;
+        updateLocationButton();
+
+
+        // Show the user that we are finding the location
+        locationNameTextView.setText("Finding current location...");
+
+        // Start a location helper to find the current location (pass the current context)
+        locHelper = new LocationHelper(this) {
+
+            // When the location changes
+            @Override
+            public void onLocationChanged(Location location) {
+                super.onLocationChanged(location);
+
+                // Set the shown location to the current location
+                locationNameTextView.setText(locHelper.locationName);
+
+                // Set the settings based on the found location
+                setSettingsForCurrentLocation();
+            }
+        };
+
+        // Get an updated location
         locHelper.updateLocation();
-        // Set the shown location to the current location
-        locationNameTextView.setText(locHelper.locationName);
 
-        // Set the settings based on the found location
-        setSettingsForCurrentLocation();
     }
 
-    /***
+    /**
      * Finds the location from current location helper
      * - Sets the current settings to the location in the helper (current location)
      */
@@ -269,7 +285,7 @@ public final class EditActivity extends AbstractPluginActivity
     }
 
 
-    /***
+    /**
      * Called when auto location checkbox is changed
      * @param view the checkbox that was checked
      */
@@ -280,7 +296,7 @@ public final class EditActivity extends AbstractPluginActivity
         setAutoLocation(check.isChecked(), false);
     }
 
-    /***
+    /**
      * Set Auto location
      * - (Set check if needed)
      * - Set auto location setting to correct value
@@ -324,7 +340,7 @@ public final class EditActivity extends AbstractPluginActivity
     }
 
 
-    /***
+    /**
      * Return timezone from provided location
      * @param location the lat/lng to find the timezone for
      * @return The timezone ID as a String
@@ -336,24 +352,26 @@ public final class EditActivity extends AbstractPluginActivity
 
     /***
      *  Request location updates on startup, pause them on activity paused
-     */
+     *
 
-    /* Request updates at startup */
+    /* Request updates at startup *
     @Override
     protected void onResume() {
         super.onResume();
         locHelper.requestLocationUpdates();
     }
 
-    /* Remove the locationlistener updates when Activity is paused */
+    /* Remove the locationlistener updates when Activity is paused *
     @Override
     protected void onPause() {
         super.onPause();
         locHelper.removeUpdates();
     }
+*/
 
 
-    /***
+
+    /**
      *  When the activity is over send all the settings back
      *  - Set the message to show user in Tasker plugin settings
      *  - Create a bundle with all the settings
@@ -364,6 +382,10 @@ public final class EditActivity extends AbstractPluginActivity
     @Override
     public void finish()
     {
+
+        // Stop requesting location updates for current location
+        locHelper.removeUpdates();
+
 
         if (!isCanceled())
         {
