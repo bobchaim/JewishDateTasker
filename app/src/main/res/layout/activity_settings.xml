@@ -27,7 +27,7 @@
             android:id="@+id/LocationName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="unknown"
+            android:text="@string/unknown_location"
             android:textSize="20dip" >
         </TextView>
 
@@ -35,14 +35,14 @@
             android:id="@+id/CustomLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select a custom location"
+            android:text="@string/select_custom_location"
             android:layout_marginTop="30dip"
             android:onClick="selectLocation" />
         <Button
             android:id="@+id/UseCurrentLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Use current location"
+            android:text="@string/current_location"
             android:layout_marginTop="10dip"
             android:onClick="useCurrentLocation" />
 
@@ -50,7 +50,7 @@
             android:id="@+id/AutoLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Automatic Location"
+            android:text="@string/use_automatic_location"
             android:layout_marginTop="30dip"
             android:onClick="setAutoLocationOn" />
     </LinearLayout>
