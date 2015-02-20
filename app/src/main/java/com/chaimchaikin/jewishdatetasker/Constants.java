@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.chaimchaikin.jewishdatedashclockextension;
+package com.chaimchaikin.jewishdatetasker;
 
 import android.content.Context;
 

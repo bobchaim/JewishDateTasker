@@ -1,4 +1,4 @@
-package com.chaimchaikin.jewishdatedashclockextension;
+package com.chaimchaikin.jewishdatetasker;
 
 import com.google.android.gms.maps.model.LatLng;
 
