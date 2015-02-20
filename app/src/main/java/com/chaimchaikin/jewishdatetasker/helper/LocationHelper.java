@@ -1,4 +1,4 @@
-package com.chaimchaikin.jewishdatedashclockextension;
+package com.chaimchaikin.jewishdatetasker.helper;
 
 import android.content.Context;
 import android.location.Address;
@@ -8,26 +8,13 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import net.sourceforge.zmanim.ComplexZmanimCalendar;
-import net.sourceforge.zmanim.hebrewcalendar.HebrewDateFormatter;
-import net.sourceforge.zmanim.hebrewcalendar.JewishCalendar;
-import net.sourceforge.zmanim.util.GeoLocation;
-
-import com.chaimchaikin.jewishdatedashclockextension.TimeZoneMapper;
+import com.chaimchaikin.jewishdatetasker.TimeZoneMapper;
 
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Created by Chaim on 2015-01-02.
