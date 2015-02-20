@@ -13,10 +13,10 @@ public class LocationPoint {
     public String locationName = "unknown";
     public String timezone = TimeZone.getDefault().getID();
 
-    public LocationPoint(LatLng location, String locationName, String timezone) {
-        location = location;
-        locationName = locationName;
-        timezone = timezone;
+    public LocationPoint(LatLng lc, String ln, String tz) {
+        location = lc;
+        locationName = ln;
+        timezone = tz;
     }
 
     public LocationPoint() {
