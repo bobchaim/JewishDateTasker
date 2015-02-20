@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Jewish Date DashClock Extension</string>
+    <string name="dc_label">Jewish Date</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_edit">Jewish Date</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="plugin_name">Jewish Date</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_custom_location">Select a location</string>
+
+</resources>
