@@ -331,7 +331,7 @@ public final class EditActivity extends AbstractPluginActivity
      */
     public String getTimezone(LatLng location) {
         TimeZoneMapper timeZoneMapper = new TimeZoneMapper();
-        return timezone = timeZoneMapper.latLngToTimezoneString(location.latitude, location.longitude);
+        return timeZoneMapper.latLngToTimezoneString(location.latitude, location.longitude);
     }
 
     /***
