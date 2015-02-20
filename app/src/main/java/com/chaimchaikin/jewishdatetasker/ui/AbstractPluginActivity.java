@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.chaimchaikin.jewishdatedashclockextension.ui;
+package com.chaimchaikin.jewishdatetasker.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -23,8 +23,8 @@ import android.view.MenuItem;
 
 
 import com.twofortyfouram.locale.BreadCrumber;
-import com.chaimchaikin.jewishdatedashclockextension.Constants;
-import com.chaimchaikin.jewishdatedashclockextension.R;
+import com.chaimchaikin.jewishdatetasker.Constants;
+import com.chaimchaikin.jewishdatetasker.R;
 
 /**
  * Superclass for plug-in Activities. This class takes care of initializing aspects of the plug-in's UI to

@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.chaimchaikin.jewishdatedashclockextension.ui;
+package com.chaimchaikin.jewishdatetasker.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,7 +22,7 @@ import android.util.Log;
 import java.util.Locale;
 
 import com.twofortyfouram.locale.PackageUtilities;
-import com.chaimchaikin.jewishdatedashclockextension.Constants;
+import com.chaimchaikin.jewishdatetasker.Constants;
 
 /**
  * If the user tries to launch the plug-in via the "Open" button in Google Play, this will redirect the user

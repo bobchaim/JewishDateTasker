@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.chaimchaikin.jewishdatedashclockextension.ui;
+package com.chaimchaikin.jewishdatetasker.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,17 +21,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.chaimchaikin.jewishdatedashclockextension.LocationPoint;
-import com.chaimchaikin.jewishdatedashclockextension.CustomLocation;
-import com.chaimchaikin.jewishdatedashclockextension.LocationHelper;
-import com.chaimchaikin.jewishdatedashclockextension.R;
-import com.chaimchaikin.jewishdatedashclockextension.TaskerPlugin;
-import com.chaimchaikin.jewishdatedashclockextension.TimeZoneMapper;
-import com.chaimchaikin.jewishdatedashclockextension.bundle.BundleScrubber;
-import com.chaimchaikin.jewishdatedashclockextension.bundle.PluginBundleManager;
+import com.chaimchaikin.jewishdatetasker.LocationPoint;
+import com.chaimchaikin.jewishdatetasker.helper.LocationHelper;
+import com.chaimchaikin.jewishdatetasker.R;
+import com.chaimchaikin.jewishdatetasker.helper.TaskerPlugin;
+import com.chaimchaikin.jewishdatetasker.TimeZoneMapper;
+import com.chaimchaikin.jewishdatetasker.bundle.BundleScrubber;
+import com.chaimchaikin.jewishdatetasker.bundle.PluginBundleManager;
 import com.google.android.gms.maps.model.LatLng;
-
-import java.util.TimeZone;
 
 /**
  * This is the "Edit" activity for a Locale Plug-in.
@@ -157,7 +154,7 @@ public final class EditActivity extends AbstractPluginActivity
     public void selectLocation(View view) {
 
         // Launch map activity
-        Intent intent = new Intent(this, CustomLocation.class);
+        Intent intent = new Intent(this, CustomLocationActivity.class);
 
         // Get the lat/lng from the current location settings
         double lat = settingsLocation.location.latitude;

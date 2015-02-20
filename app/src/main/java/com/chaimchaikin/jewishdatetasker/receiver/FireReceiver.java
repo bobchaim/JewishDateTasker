@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.chaimchaikin.jewishdatedashclockextension.receiver;
+package com.chaimchaikin.jewishdatetasker.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,12 +18,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.chaimchaikin.jewishdatedashclockextension.Constants;
-import com.chaimchaikin.jewishdatedashclockextension.JewishDateHelper;
-import com.chaimchaikin.jewishdatedashclockextension.LocationHelper;
-import com.chaimchaikin.jewishdatedashclockextension.TaskerPlugin;
-import com.chaimchaikin.jewishdatedashclockextension.bundle.BundleScrubber;
-import com.chaimchaikin.jewishdatedashclockextension.ui.EditActivity;
+import com.chaimchaikin.jewishdatetasker.Constants;
+import com.chaimchaikin.jewishdatetasker.helper.JewishDateHelper;
+import com.chaimchaikin.jewishdatetasker.helper.LocationHelper;
+import com.chaimchaikin.jewishdatetasker.helper.TaskerPlugin;
+import com.chaimchaikin.jewishdatetasker.bundle.BundleScrubber;
+import com.chaimchaikin.jewishdatetasker.ui.EditActivity;
 
 import java.util.Locale;
 

@@ -10,14 +10,14 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.chaimchaikin.jewishdatedashclockextension.bundle;
+package com.chaimchaikin.jewishdatetasker.bundle;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.chaimchaikin.jewishdatedashclockextension.Constants;
+import com.chaimchaikin.jewishdatetasker.Constants;
 
 /**
  * Class for managing the {@link com.twofortyfouram.locale.Intent#EXTRA_BUNDLE} for this plug-in.
