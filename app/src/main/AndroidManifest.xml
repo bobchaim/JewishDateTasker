@@ -23,7 +23,7 @@
         <activity
             android:name="com.chaimchaikin.jewishdatetasker.ui.EditActivity"
             android:exported="true"
-            android:label="@string/title_activity_edit" >
+            android:label="@string/plugin_name" >
             <intent-filter>
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
@@ -43,7 +43,7 @@
 
         <activity
             android:name=".ui.CustomLocationActivity"
-            android:label="@string/title_activity_custom_location" >
+            android:label="@string/select_custom_location" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.chaimchaikin.jewishdatetasker.ui.EditActivity" />
