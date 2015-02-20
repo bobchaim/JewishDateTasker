@@ -1,4 +1,4 @@
-package com.chaimchaikin.jewishdatedashclockextension;
+package com.chaimchaikin.jewishdatetasker.helper;
 
 // Constants and functions for Tasker *extensions* to the plugin protocol
 // See Also: http://tasker.dinglisch.net/plugins.html
@@ -24,18 +24,18 @@ package com.chaimchaikin.jewishdatedashclockextension;
 // added RESULT_CODE_FAILED_PLUGIN_FIRST
 // added Setting.VARNAME_ERROR_MESSAGE
 
-        import java.net.URISyntaxException;
-        import java.security.SecureRandom;
-        import java.util.regex.Pattern;
-
         import android.app.Activity;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.content.pm.PackageInfo;
-        import android.content.pm.PackageManager;
-        import android.net.Uri;
-        import android.os.Bundle;
-        import android.util.Log;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+
+import java.net.URISyntaxException;
+import java.security.SecureRandom;
+import java.util.regex.Pattern;
 
 public class TaskerPlugin {
 

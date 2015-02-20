@@ -5,7 +5,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.chaimchaikin.jewishdatedashclockextension"
+        applicationId "com.chaimchaikin.jewishdatetasker"
         minSdkVersion 11
         targetSdkVersion 21
         versionCode 1

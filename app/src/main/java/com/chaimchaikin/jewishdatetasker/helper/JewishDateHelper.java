@@ -1,4 +1,4 @@
-package com.chaimchaikin.jewishdatedashclockextension;
+package com.chaimchaikin.jewishdatetasker.helper;
 
 import net.sourceforge.zmanim.ComplexZmanimCalendar;
 import net.sourceforge.zmanim.hebrewcalendar.HebrewDateFormatter;

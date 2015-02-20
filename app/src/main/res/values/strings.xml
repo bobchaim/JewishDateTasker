@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Jewish Date DashClock Extension</string>
+    <string name="app_name">Jewish Date Tasker Plugin</string>
     <string name="dc_label">Jewish Date</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_edit">Jewish Date</string>
