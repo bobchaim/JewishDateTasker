@@ -19,25 +19,17 @@ import java.util.TimeZone;
 public class JewishDateHelper {
 
     String locationName = "";
-    double locationLat = 40.6928;
-    double locationLng = -73.9903;
-
+    double locationLat = 0;
+    double locationLng = 0;
     TimeZone timeZone;
-    String longDate = "";
-    String shortDate = "";
-    String longText = "";
 
-    public String getLongDate() {
-       return longDate;
-    }
 
-    public String getShortDate() {
-        return shortDate;
-    }
+    public String longDate = "";
+    public String shortDate = "";
+    public String longText = "";
+    public String shortHebrewDate = "";
+    public String longHebrewDate = "";
 
-    public String getLongText() {
-        return longText;
-    }
 
     public void setLocation(String name, double lat, double lng, String tZ) {
         locationName = name;
@@ -84,11 +76,14 @@ public class JewishDateHelper {
         String englishDateText = englishDateFormat.format(curTime);
 
         String dayOrNight = "Day";
+        String evePrefixHebrew = "";
 
         // If after sunset then
         if (currentTime.isAfter(sunsetTime)) {
             // Add "eve" prefix
             hebrewDateText += "Eve of ";
+            evePrefixHebrew = "ליל ";
+
             // Go to the next day
             englishDate.add(Calendar.DATE, 1);
 
@@ -129,6 +124,9 @@ public class JewishDateHelper {
         // Get the short date (just day of month and month name)
         shortDate =  jewishDate.getJewishDayOfMonth() + " " + hdfTransliterated.formatMonth(jewishDate);
 
+        shortHebrewDate = hdf.format(jewishDate);
+
+        longHebrewDate = evePrefixHebrew + shortHebrewDate;
 
 
         if(jewishDate.getDayOfWeek() == 6) {

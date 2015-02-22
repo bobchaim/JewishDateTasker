@@ -103,20 +103,17 @@ public final class FireReceiver extends BroadcastReceiver
             // Update the dates
             jewishDate.updateDates();
 
-            // Initialize variables for some dates we are going to return
-            String hebrewDateTextShort = jewishDate.getShortDate();
-            String hebrewDateTextLong = jewishDate.getLongDate();
-            String descriptionString = jewishDate.getLongText();
-
             // Check support for returning variables
             if ( TaskerPlugin.Setting.hostSupportsVariableReturn( intent.getExtras() ) ) {
 
                 // Create a new bundle
                 Bundle vars = new Bundle();
                 // Add all the variables to return
-                vars.putString( "%jd_short", hebrewDateTextShort );
-                vars.putString( "%jd_long", hebrewDateTextLong );
-                vars.putString( "%jd_desc", descriptionString );
+                vars.putString( "%jd_short", jewishDate.shortDate );
+                vars.putString( "%jd_long", jewishDate.longDate );
+                vars.putString( "%jd_desc", jewishDate.longText );
+                vars.putString( "%jd_hebrew_short", jewishDate.shortHebrewDate );
+                vars.putString( "%jd_hebrew_long", jewishDate.longHebrewDate );
                 vars.putString( "%jd_loc", locName );
 
                 // Return the bundle of variables
