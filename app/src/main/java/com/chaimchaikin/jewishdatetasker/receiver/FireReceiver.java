@@ -42,16 +42,14 @@ public final class FireReceiver extends BroadcastReceiver
      *            {@link EditActivity} and later broadcast by Locale.
      */
     @Override
-    public void onReceive(final Context context, final Intent intent)
-    {
+    public void onReceive(final Context context, final Intent intent) {
+
         /*
          * Always be strict on input parameters! A malicious third-party app could send a malformed Intent.
          */
 
-        if (!com.twofortyfouram.locale.Intent.ACTION_FIRE_SETTING.equals(intent.getAction()))
-        {
-            if (Constants.IS_LOGGABLE)
-            {
+        if (!com.twofortyfouram.locale.Intent.ACTION_FIRE_SETTING.equals(intent.getAction())) {
+            if (Constants.IS_LOGGABLE) {
                 Log.e(Constants.LOG_TAG,
                       String.format(Locale.US, "Received unexpected Intent action %s", intent.getAction())); //$NON-NLS-1$
             }
@@ -63,28 +61,33 @@ public final class FireReceiver extends BroadcastReceiver
         final Bundle bundle = intent.getBundleExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE);
         BundleScrubber.scrub(bundle);
 
-  /*      if (PluginBundleManager.isBundleValid(bundle))
-        {
+/*
+        if (PluginBundleManager.isBundleValid(bundle)) {
 
-            //final String message = bundle.getString(PluginBundleManager.BUNDLE_EXTRA_STRING_MESSAGE);
-            //Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         }
 */
+
         if ( isOrderedBroadcast() ) {
 
+
+            // Set result OK
             setResultCode(TaskerPlugin.Setting.RESULT_CODE_OK);
 
+
+            // Create a new JewishDateHelper to calculate times and dates
             JewishDateHelper jewishDate = new JewishDateHelper();
 
 
-            String locName;
-            double lat;
-            double lng;
-            String timezone;
+            // Initialize Variables to values in settings
+            boolean autoLocation = bundle.getBoolean("loc_auto", false);
+            String locName = bundle.getString("loc_name");
+            double lat = bundle.getDouble("loc_lat");
+            double lng = bundle.getDouble("loc_lng");
+            String timezone = bundle.getString("timezone");
 
 
-
-            /*if(bundle.getBoolean("loc_auto", false)) {
+            // If auto location is set, try to find a more up to date location
+            /*if(autoLocation) {
                 LocationHelper locHelper = new LocationHelper(context);
                 locHelper.updateLocation();
 
@@ -92,31 +95,31 @@ public final class FireReceiver extends BroadcastReceiver
                 lat = locHelper.lat;
                 lng = locHelper.lng;
                 timezone = locHelper.timezone;
-            } else {*/
-                locName = bundle.getString("loc_name");
-                lat = bundle.getDouble("loc_lat");
-                lng = bundle.getDouble("loc_lng");
-                timezone = bundle.getString("timezone");
-            //}
+            }*/
 
-
-
+            // Set the location for the JewishDateHelper
             jewishDate.setLocation(locName, lat, lng, timezone);
 
+            // Update the dates
             jewishDate.updateDates();
 
+            // Initialize variables for some dates we are going to return
             String hebrewDateTextShort = jewishDate.getShortDate();
             String hebrewDateTextLong = jewishDate.getLongDate();
             String descriptionString = jewishDate.getLongText();
 
+            // Check support for returning variables
             if ( TaskerPlugin.Setting.hostSupportsVariableReturn( intent.getExtras() ) ) {
 
+                // Create a new bundle
                 Bundle vars = new Bundle();
+                // Add all the variables to return
                 vars.putString( "%jd_short", hebrewDateTextShort );
                 vars.putString( "%jd_long", hebrewDateTextLong );
                 vars.putString( "%jd_desc", descriptionString );
                 vars.putString( "%jd_loc", locName );
 
+                // Return the bundle of variables
                 TaskerPlugin.addVariableBundle( getResultExtras( true ), vars );
             }
         }
