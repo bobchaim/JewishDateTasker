@@ -36,9 +36,7 @@ public class JewishDateHelper {
         locationLat = lat;
         locationLng = lng;
 
-        String timeZoneName = tZ;
-        timeZone = TimeZone.getTimeZone(timeZoneName);
-
+        timeZone = TimeZone.getTimeZone(tZ);
     }
 
 
@@ -128,11 +126,12 @@ public class JewishDateHelper {
 
         longHebrewDate = evePrefixHebrew + shortHebrewDate;
 
+        DateTime midnightToday = new DateTime().withTimeAtStartOfDay();
 
-        if(jewishDate.getDayOfWeek() == 6) {
+        // Show candle lighting only on 6th day of Hebrew Week (after midnight)
+        if(jewishDate.getDayOfWeek() == 6  && currentTime.isAfter(midnightToday)) {
             descriptionString += "Candle Lighting: " + candleLightingTime;
         }
-
 
         if(descriptionString.length() > 0) {
             descriptionString += ", ";
