@@ -313,14 +313,19 @@ public final class EditActivity extends AbstractPluginActivity
         Button customLoc = (Button) findViewById(R.id.CustomLocation);
         CheckBox autoLocationCheck = (CheckBox) findViewById(R.id.AutoLocation);
 
+
         // Set the check if needed (e.g. when loaded from settings)
         if(setCheck) {
             autoLocationCheck.setChecked(on);
         }
 
         if(on) {
+
             // Set the auto location setting to be on
             settingLocationAuto = true;
+
+            // Get the current location
+            updateLocation();
 
             // Disable all other ui to choose a location
             customLoc.setEnabled(false);

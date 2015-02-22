@@ -19,10 +19,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.chaimchaikin.jewishdatetasker.Constants;
-import com.chaimchaikin.jewishdatetasker.helper.JewishDateHelper;
-import com.chaimchaikin.jewishdatetasker.helper.LocationHelper;
-import com.chaimchaikin.jewishdatetasker.helper.TaskerPlugin;
 import com.chaimchaikin.jewishdatetasker.bundle.BundleScrubber;
+import com.chaimchaikin.jewishdatetasker.helper.JewishDateHelper;
+import com.chaimchaikin.jewishdatetasker.helper.TaskerPlugin;
 import com.chaimchaikin.jewishdatetasker.ui.EditActivity;
 
 import java.util.Locale;
@@ -79,11 +78,13 @@ public final class FireReceiver extends BroadcastReceiver
 
 
             String locName;
-            double lat = 0;
-            double lng = 0;
+            double lat;
+            double lng;
             String timezone;
 
-            if(bundle.getBoolean("loc_auto", false)) {
+
+
+            /*if(bundle.getBoolean("loc_auto", false)) {
                 LocationHelper locHelper = new LocationHelper(context);
                 locHelper.updateLocation();
 
@@ -91,12 +92,14 @@ public final class FireReceiver extends BroadcastReceiver
                 lat = locHelper.lat;
                 lng = locHelper.lng;
                 timezone = locHelper.timezone;
-            } else {
+            } else {*/
                 locName = bundle.getString("loc_name");
                 lat = bundle.getDouble("loc_lat");
                 lng = bundle.getDouble("loc_lng");
                 timezone = bundle.getString("timezone");
-            }
+            //}
+
+
 
             jewishDate.setLocation(locName, lat, lng, timezone);
 
