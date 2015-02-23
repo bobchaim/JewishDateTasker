@@ -79,7 +79,18 @@ public final class EditActivity extends AbstractPluginActivity
         BundleScrubber.scrub(localeBundle);
 
         // Create a new location helper
-        locHelper = new LocationHelper(this);
+        // Start a location helper to find the current location (pass the current context)
+        locHelper = new LocationHelper(this) {
+
+            // When the location changes
+            @Override
+            public void onLocationChanged(Location location) {
+                super.onLocationChanged(location);
+
+                locationChanged();
+            }
+        };
+
 
         // Set the correct view
         setContentView(R.layout.activity_settings);
@@ -245,25 +256,20 @@ public final class EditActivity extends AbstractPluginActivity
         // Show the user that we are finding the location
         locationNameTextView.setText(R.string.finding_location);
 
-        // Start a location helper to find the current location (pass the current context)
-        locHelper = new LocationHelper(this) {
-
-            // When the location changes
-            @Override
-            public void onLocationChanged(Location location) {
-                super.onLocationChanged(location);
-
-                // Set the shown location to the current location
-                locationNameTextView.setText(locHelper.locationName);
-
-                // Set the settings based on the found location
-                setSettingsForCurrentLocation();
-            }
-        };
 
         // Get an updated location
         locHelper.requestLocationUpdates();
 
+    }
+
+    private void locationChanged() {
+        if(!customLocationSet || settingLocationAuto) {
+            // Set the shown location to the current location
+            locationNameTextView.setText(locHelper.locationName);
+
+            // Set the settings based on the found location
+            setSettingsForCurrentLocation();
+        }
     }
 
     /**
