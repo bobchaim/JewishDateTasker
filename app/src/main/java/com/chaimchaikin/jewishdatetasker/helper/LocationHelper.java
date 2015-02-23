@@ -9,6 +9,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
+import com.chaimchaikin.jewishdatetasker.R;
 import com.chaimchaikin.jewishdatetasker.TimeZoneMapper;
 
 import java.io.IOException;
@@ -116,7 +117,7 @@ public class LocationHelper implements LocationListener {
      */
     public String getLocationName(double lat, double lng) {
         // Start with location "unknown" in case we can't get location from geocoder
-        String locationNameText = "unknown";
+        String locationNameText = mContext.getString(R.string.unknown_location);
 
         // Create a new geocoder
         Geocoder geocoder = new Geocoder(mContext.getApplicationContext(), Locale.getDefault());

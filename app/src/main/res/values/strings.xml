@@ -5,7 +5,8 @@
     <string name="plugin_name">Jewish Date</string>
     <string name="use_automatic_location">Automatic Location</string>
     <string name="current_location">Use current location</string>
-    <string name="unknown_location">unknown</string>
+    <string name="unknown_location">Unknown</string>
     <string name="select_custom_location">Select a custom location</string>
+    <string name="finding_location">Finding current location...</string>
 
 </resources>

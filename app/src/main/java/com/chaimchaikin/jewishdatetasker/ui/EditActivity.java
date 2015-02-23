@@ -32,19 +32,8 @@ import com.chaimchaikin.jewishdatetasker.helper.TaskerPlugin;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
- * This is the "Edit" activity for a Locale Plug-in.
- * <p>
- * This Activity can be started in one of two states:
- * <ul>
- * <li>New plug-in instance: The Activity's Intent will not contain
- * {@link com.twofortyfouram.locale.Intent#EXTRA_BUNDLE}.</li>
- * <li>Old plug-in instance: The Activity's Intent will contain
- * {@link com.twofortyfouram.locale.Intent#EXTRA_BUNDLE} from a previously saved plug-in instance that the
- * user is editing.</li>
- * </ul>
+ * Edit activity for the Tasker Plug-in.
  *
- * @see com.twofortyfouram.locale.Intent#ACTION_EDIT_SETTING
- * @see com.twofortyfouram.locale.Intent#EXTRA_BUNDLE
  */
 public final class EditActivity extends AbstractPluginActivity
 {
@@ -216,8 +205,10 @@ public final class EditActivity extends AbstractPluginActivity
      * Sets the "use current location" button to be enabled or disabled based on whether a custom location is selected
      */
     public void updateLocationButton() {
+        // Find the button from view
         Button button = (Button) findViewById(R.id.UseCurrentLocation);
 
+        // Enable/disable the button
         button.setEnabled(customLocationSet);
     }
 
@@ -252,7 +243,7 @@ public final class EditActivity extends AbstractPluginActivity
 
 
         // Show the user that we are finding the location
-        locationNameTextView.setText("Finding current location...");
+        locationNameTextView.setText(R.string.finding_location);
 
         // Start a location helper to find the current location (pass the current context)
         locHelper = new LocationHelper(this) {
@@ -395,7 +386,7 @@ public final class EditActivity extends AbstractPluginActivity
         {
             // The message is what is shown in the Tasker plugin settings
             String messageText = settingsLocation.locationName; // Set it to the name
-            if(settingLocationAuto) messageText = "Automatic"; // unless auto location is on
+            if(settingLocationAuto) messageText = getString(R.string.use_automatic_location); // unless auto location is on
 
             final String message = messageText;
 
