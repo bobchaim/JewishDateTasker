@@ -30,6 +30,9 @@ public class LocationHelper implements LocationListener {
     private LocationManager locationManager;
     private String provider;
 
+    // Keep track of requests for update
+    private boolean updatesRequested = false;
+
     // Stores context from parent
     private Context mContext;
 
@@ -64,15 +67,22 @@ public class LocationHelper implements LocationListener {
      * Request the LocationManager to look for location updates
      */
     public void requestLocationUpdates() {
-        // Register the listener with the Location Manager to receive location updates
-        locationManager.requestLocationUpdates(provider, 300, 10, LocationHelper.this);
+        // Only request new updates if they haven't been requested already
+        if(!updatesRequested) {
+            // Register the listener with the Location Manager to receive location updates
+            locationManager.requestLocationUpdates(provider, 300, 10, LocationHelper.this);
+
+            updatesRequested = true;
+        }
     }
 
     /**
      * Remove all requested location update requests
      */
     public void removeUpdates() {
+
         locationManager.removeUpdates(this);
+        updatesRequested = false;
     }
 
     /**
