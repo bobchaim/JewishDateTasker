@@ -299,11 +299,8 @@ public final class EditActivity extends AbstractPluginActivity
      */
     // Set auto location
     public void setAutoLocation(boolean on, boolean setCheck) {
-        // Get all the views that we need to disable/enable
-        Button currentLoc = (Button) findViewById(R.id.UseCurrentLocation);
-        Button customLoc = (Button) findViewById(R.id.CustomLocation);
+        // Get view for the check
         CheckBox autoLocationCheck = (CheckBox) findViewById(R.id.AutoLocation);
-
 
         // Set the check if needed (e.g. when loaded from settings)
         if(setCheck) {
@@ -319,20 +316,31 @@ public final class EditActivity extends AbstractPluginActivity
             updateLocation();
 
             // Disable all other ui to choose a location
-            customLoc.setEnabled(false);
-            currentLoc.setEnabled(false);
-            locationNameTextView.setEnabled(false);
-
+            enableOrDisableLocationChooserUI(false);
         } else {
             // Set auto location setting off
             settingLocationAuto = false;
 
             // Enable ui to choose a location
-            customLoc.setEnabled(true);
-            currentLoc.setEnabled(true);
-            locationNameTextView.setEnabled(true);
+            enableOrDisableLocationChooserUI(true);
 
         }
+    }
+
+    /**
+     * Enable/disable all location chooser ui elements
+     *
+     * @param enable True to enable / False to disable
+     */
+    private void enableOrDisableLocationChooserUI(boolean enable) {
+        // Get all the views that we need to disable/enable
+        Button currentLoc = (Button) findViewById(R.id.UseCurrentLocation);
+        Button customLoc = (Button) findViewById(R.id.CustomLocation);
+
+        // Enable/disable views
+        customLoc.setEnabled(enable);
+        currentLoc.setEnabled(enable);
+        locationNameTextView.setEnabled(enable);
     }
 
 
@@ -345,10 +353,13 @@ public final class EditActivity extends AbstractPluginActivity
         return TimeZoneMapper.latLngToTimezoneString(location.latitude, location.longitude);
     }
 
-    /***
+    /**
      *  Request location updates on startup, pause them on activity paused
      *
+     *  TODO: Make location updates pause on suspend and resume on resume BUT only if needed
+     */
 
+/*
     /* Request updates at startup *
     @Override
     protected void onResume() {
@@ -382,8 +393,7 @@ public final class EditActivity extends AbstractPluginActivity
         locHelper.removeUpdates();
 
 
-        if (!isCanceled())
-        {
+        if (!isCanceled()) {
             // The message is what is shown in the Tasker plugin settings
             String messageText = settingsLocation.locationName; // Set it to the name
             if(settingLocationAuto) messageText = getString(R.string.use_automatic_location); // unless auto location is on

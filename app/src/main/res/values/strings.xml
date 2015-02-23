@@ -8,5 +8,6 @@
     <string name="unknown_location">Unknown</string>
     <string name="select_custom_location">Select a custom location</string>
     <string name="finding_location">Finding current location...</string>
+    <string name="showing_times_for">Showing times for:</string>
 
 </resources>

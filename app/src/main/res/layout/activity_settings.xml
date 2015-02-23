@@ -8,19 +8,17 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:id="@+id/linearLayout1"
+        android:id="@+id/LocationChooser"
         android:layout_width="match_parent"
         android:layout_marginTop="10dip"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/TextView05"
+            android:id="@+id/ShowingTimes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="0dip"
-            android:layout_marginRight="5dip"
-            android:text="Showing times for: "
-            android:textSize="10dip" >
+            android:text="@string/showing_times_for"
+            android:textSize="12sp" >
         </TextView>
 
         <TextView
@@ -28,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/unknown_location"
-            android:textSize="20dip" >
+            android:textSize="20sp" >
         </TextView>
 
         <Button
@@ -36,14 +34,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/select_custom_location"
-            android:layout_marginTop="30dip"
+            android:layout_marginTop="20dip"
             android:onClick="selectLocation" />
         <Button
             android:id="@+id/UseCurrentLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/current_location"
-            android:layout_marginTop="10dip"
+            android:layout_marginTop="0dip"
             android:onClick="useCurrentLocation" />
 
         <CheckBox
@@ -54,5 +52,7 @@
             android:layout_marginTop="30dip"
             android:onClick="setAutoLocationOn" />
     </LinearLayout>
+
+
 
 </RelativeLayout>
