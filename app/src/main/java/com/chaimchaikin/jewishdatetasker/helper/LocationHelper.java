@@ -25,14 +25,17 @@ import java.util.Locale;
  */
 public class LocationHelper implements LocationListener {
 
+    // Internal variables for finding location
     private LocationManager locationManager;
     private String provider;
 
+    // Stores context from parent
+    private Context mContext;
+
+    // Variables accessible from outside store current location and details
     public String locationName, timezone;
     public Double lat, lng;
 
-
-    private Context mContext;
 
     /**
      * Constructor for LocationHelper
