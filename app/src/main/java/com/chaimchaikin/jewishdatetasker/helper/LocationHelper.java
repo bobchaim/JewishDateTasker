@@ -25,8 +25,6 @@ import java.util.Locale;
  */
 public class LocationHelper implements LocationListener {
 
-    boolean locationUpdatesRequested;
-
     private LocationManager locationManager;
     private String provider;
 
@@ -34,84 +32,110 @@ public class LocationHelper implements LocationListener {
     public Double lat, lng;
 
 
-    public Context mContext;
+    private Context mContext;
+
+    /**
+     * Constructor for LocationHelper
+     *
+     * - Starts a new LocationManager
+     * - Finds the best available provider
+     *
+     * @param mContext receives the context from the parent class for later use
+     */
 
     public LocationHelper (Context mContext){
+        // Store the context for later use
         this.mContext = mContext;
 
         // Get the location manager
         locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-        // Define the criteria how to select the locatioin provider -> use
-        // default
+
+        // Find the best provider
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, true);
 
-
-        /*Location location = locationManager.getLastKnownLocation(provider);
-
-        // Initialize the location fields
-        if (location != null) {
-            //System.out.println("Provider " + provider + " has been selected.");
-            onLocationChanged(location);
-        } else {
-            locationName = "Location not available";
-        }*/
     }
 
-
-    public void updateLocation() {
+    /**
+     * Request the LocationManager to look for location updates
+     */
+    public void requestLocationUpdates() {
         // Register the listener with the Location Manager to receive location updates
         locationManager.requestLocationUpdates(provider, 300, 10, LocationHelper.this);
-
-        locationUpdatesRequested = true;
     }
 
-    /*
-    public void requestLocationUpdates() {
-        locationUpdatesRequested = true;
-        locationManager.requestLocationUpdates(provider, 400, 1, this);
-    }
-    */
-
+    /**
+     * Remove all requested location update requests
+     */
     public void removeUpdates() {
-
-        if(locationUpdatesRequested) {
-            locationManager.removeUpdates(this);
-            locationUpdatesRequested = false;
-        }
-
+        locationManager.removeUpdates(this);
     }
 
+    /**
+     * Get and store the timezone from the current lat/lng
+     */
     public void getTimezone() {
         timezone = TimeZoneMapper.latLngToTimezoneString(lat, lng);
     }
 
 
+    /**
+     * When location is changed
+     *
+     * - Store the new location
+     * - Get the timezone for this location
+     * - Get the location name for this location
+     *
+     * @param location the new location
+     */
     @Override
     public void onLocationChanged(Location location) {
+        // Store new location
         lat = location.getLatitude();
         lng = location.getLongitude();
 
-
+        // Get timezone for location
         getTimezone();
+
+        // Get location name
         locationName = getLocationName(lat, lng);
     }
 
+    /**
+     * Gets the name of the location from lat/lng
+     *
+     * - Creates a new geocoder
+     * - Finds the location name
+     *
+     * @param lat Latitude
+     * @param lng Longitude
+     * @return String containing location name
+     */
     public String getLocationName(double lat, double lng) {
+        // Start with location "unknown" in case we can't get location from geocoder
         String locationNameText = "unknown";
 
+        // Create a new geocoder
         Geocoder geocoder = new Geocoder(mContext.getApplicationContext(), Locale.getDefault());
         try {
+            // Get address from location
             List<Address> listAddresses = geocoder.getFromLocation(lat, lng, 1);
             if(null!=listAddresses&&listAddresses.size()>0){
 
+                // Make a comma separated list of the address
                 locationNameText = listAddresses.get(0).getSubLocality() + ", " + listAddresses.get(0).getLocality() + ", " + listAddresses.get(0).getSubAdminArea() + ", " + listAddresses.get(0).getAdminArea() + ", " + listAddresses.get(0).getCountryName();
+
+                // Since not all locations have the same method for getting the readable part of the address
+                // we get all the possible parts of the address and then filter out all the 'null,' results
+                // (e.g. some places return null for subLocality and proper name for Locality others return
+                //       proper name for subLocality and null for Locality)
                 locationNameText = locationNameText.replace("null, ", "");
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        // Return the location name
         return locationNameText;
     }
 

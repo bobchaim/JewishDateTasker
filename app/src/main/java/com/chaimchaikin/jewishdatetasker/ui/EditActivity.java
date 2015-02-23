@@ -271,7 +271,7 @@ public final class EditActivity extends AbstractPluginActivity
         };
 
         // Get an updated location
-        locHelper.updateLocation();
+        locHelper.requestLocationUpdates();
 
     }
 
