@@ -109,12 +109,27 @@ public final class FireReceiver extends BroadcastReceiver
                 // Create a new bundle
                 Bundle vars = new Bundle();
                 // Add all the variables to return
-                vars.putString( "%jd_short", jewishDate.shortDate );
-                vars.putString( "%jd_long", jewishDate.longDate );
-                vars.putString( "%jd_desc", jewishDate.longText );
-                vars.putString( "%jd_hebrew_short", jewishDate.shortHebrewDate );
-                vars.putString( "%jd_hebrew_long", jewishDate.longHebrewDate );
+                vars.putString( "%jd_short", jewishDate.vars.getString("shortDate") );
+                vars.putString( "%jd_long", jewishDate.vars.getString("longDate") );
+                vars.putString( "%jd_hebrew_short", jewishDate.vars.getString("shortHebrewDate") );
+                vars.putString( "%jd_hebrew_long", jewishDate.vars.getString("longHebrewDate") );
+
+                vars.putString( "%jd_desc", jewishDate.vars.getString("longText") );
                 vars.putString( "%jd_loc", locName );
+
+                vars.putBoolean( "%jd_after_sunset", jewishDate.vars.getBoolean("afterSunset") );
+
+                vars.putString( "%jd_parsha", jewishDate.vars.getString("englishParsha") );
+                vars.putString( "%jd_hebrew_parsha", jewishDate.vars.getString("hebrewParsha") );
+
+                vars.putString( "%jd_day", jewishDate.vars.getString("englishDay") );
+                vars.putString( "%jd_month", jewishDate.vars.getString("englishMonth") );
+                vars.putString( "%jd_year", jewishDate.vars.getString("englishYear") );
+
+                vars.putString( "%jd_hebrew_day", jewishDate.vars.getString("hebrewDay") );
+                vars.putString( "%jd_hebrew_month", jewishDate.vars.getString("hebrewMonth") );
+                vars.putString( "%jd_hebrew_year", jewishDate.vars.getString("hebrewYear") );
+
 
                 // Return the bundle of variables
                 TaskerPlugin.addVariableBundle( getResultExtras( true ), vars );
