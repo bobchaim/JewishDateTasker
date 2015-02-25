@@ -167,7 +167,7 @@ public class JewishDateHelper {
         vars.putString("longDate", longDate);
 
         // Make hebrew date strings
-        String shortHebrewDate = dateFormatterEnglish.format(jewishDate);
+        String shortHebrewDate = dateFormatterHebrew.format(jewishDate);
         String longHebrewDate = evePrefixHebrew + shortHebrewDate;
 
         // Make Hebrew dates available as variables
