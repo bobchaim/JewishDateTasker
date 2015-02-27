@@ -22,14 +22,14 @@ import com.chaimchaikin.jewishdatetasker.Constants;
 /**
  * Class for managing the {@link com.twofortyfouram.locale.Intent#EXTRA_BUNDLE} for this plug-in.
  */
-public final class PluginBundleManager
+public final class PluginActionBundleManager
 {
     /**
      * Type: {@code String}.
      * <p>
      * String message to display in a Toast message.
      */
-    public static final String BUNDLE_EXTRA_STRING_MESSAGE = "com.yourcompany.yourapp.extra.STRING_MESSAGE"; //$NON-NLS-1$
+    public static final String BUNDLE_EXTRA_STRING_MESSAGE = "com.chaimchaikin.jewishdatetasker.extra.STRING_MESSAGE"; //$NON-NLS-1$
 
     /**
      * Type: {@code int}.
@@ -42,7 +42,7 @@ public final class PluginBundleManager
      * having the version, the plug-in can better detect when such bugs occur.
      */
     public static final String BUNDLE_EXTRA_INT_VERSION_CODE =
-            "com.chaimchaikin.jewishdatedashclockextension.extra.INT_VERSION_CODE"; //$NON-NLS-1$
+            "com.chaimchaikin.jewishdatetasker.extra.INT_VERSION_CODE"; //$NON-NLS-1$
 
     /**
      * Method to verify the content of the bundle are correct.
@@ -139,7 +139,7 @@ public final class PluginBundleManager
      *
      * @throws UnsupportedOperationException because this class cannot be instantiated.
      */
-    private PluginBundleManager()
+    private PluginActionBundleManager()
     {
         throw new UnsupportedOperationException("This class is non-instantiable"); //$NON-NLS-1$
     }

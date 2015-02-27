@@ -26,7 +26,7 @@ import com.chaimchaikin.jewishdatetasker.LocationPoint;
 import com.chaimchaikin.jewishdatetasker.R;
 import com.chaimchaikin.jewishdatetasker.TimeZoneMapper;
 import com.chaimchaikin.jewishdatetasker.bundle.BundleScrubber;
-import com.chaimchaikin.jewishdatetasker.bundle.PluginBundleManager;
+import com.chaimchaikin.jewishdatetasker.bundle.PluginActionBundleManager;
 import com.chaimchaikin.jewishdatetasker.helper.LocationHelper;
 import com.chaimchaikin.jewishdatetasker.helper.TaskerPlugin;
 import com.google.android.gms.maps.model.LatLng;
@@ -416,7 +416,7 @@ public final class EditActivity extends AbstractPluginActivity {
              * stored in the Bundle, as Locale's classloader will not recognize it).
              */
             final Bundle resultBundle =
-                    PluginBundleManager.generateBundle(getApplicationContext(), message);
+                    PluginActionBundleManager.generateBundle(getApplicationContext(), message);
 
             // All the plugin action settings
             resultBundle.putDouble("loc_lat", settingsLocation.location.latitude);
