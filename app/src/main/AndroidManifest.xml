@@ -21,7 +21,17 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="com.chaimchaikin.jewishdatetasker.ui.EditActivity"
+            android:name=".ui.InfoActivity"
+            android:label="@string/plugin_name" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.EditActivity"
             android:exported="true"
             android:label="@string/plugin_name" >
             <intent-filter>
