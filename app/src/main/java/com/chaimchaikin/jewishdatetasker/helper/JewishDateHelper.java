@@ -214,6 +214,15 @@ public class JewishDateHelper {
             descriptionString += dateFormatterEnglish.formatYomTov(jewishDate);
         }
 
+/*
+        // TODO: On a fast day show fast starting/ending times
+        if(jewishDate.isTaanis()) {
+
+            descriptionString += ", ";
+
+        }
+*/
+
         // Chanukah
         if (jewishDate.isChanukah()) {
             descriptionString += ", ";

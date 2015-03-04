@@ -455,7 +455,7 @@ public final class EditActivity extends AbstractPluginActivity {
                         "%jd_parsha\nParsha\nParsha of the week transliterated <b>e.g. Beshalach</b>",
 
                         // Hebrew
-                        "%jd_hebrew_*\nGet a variable in Hebrew letters\n Use the above variables to get the values in Hebrew<b>e.g. %jd_hebrew_month כסלב</b>",
+                        "%jd_hebrew_*\nGet a variable in Hebrew letters\n Use the above variables to get the values in Hebrew <b>e.g. %jd_hebrew_month כסלב</b>",
 
                         // Sunset
                         "%jd_after_sunset\nAfter Sunset\nTrue after sunset (but before midnight) <b>e.g. true</b>",
@@ -463,7 +463,7 @@ public final class EditActivity extends AbstractPluginActivity {
                         // Extra info
                         "%jd_desc\nDescription\nFull description includes parsha, special dates and relevant times <b>e.g. Parshat Beshalach</b>",
                         "%jd_loc\nLocation\nLocation for Zmanim calculations <b>e.g. Brooklyn, New York, USA</b>",
-                        "%jd_time_*\nUse these to get Zmanim in 24 Hour format (e.g. 14:20)\nAvailable Zmanim:<br>sunset Sunset<br>cl Candle Lighting<br>hav Havdolah"
+                        "%jd_zmanim_*\nUse these to get Zmanim in 24 hour format (e.g. 14:20)\nAvailable Zmanim:<br>_sunset Sunset<br>_cl Candle Lighting"
                 } );
 
             // Set the result as ok and pass the intent
