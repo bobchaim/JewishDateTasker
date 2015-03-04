@@ -130,6 +130,10 @@ public final class FireReceiver extends BroadcastReceiver
                 vars.putString( "%jd_hebrew_month", jewishDate.vars.getString("hebrewMonth") );
                 vars.putString( "%jd_hebrew_year", jewishDate.vars.getString("hebrewYear") );
 
+                vars.putString( "%jd_zmanim_sunset", jewishDate.vars.getString("zmanimSunset") );
+                vars.putString( "%jd_zmanim_cl", jewishDate.vars.getString("zmanimCandleLighting") );
+                vars.putString( "%jd_zmanim_hav", jewishDate.vars.getString("zmanimHavdolah") );
+
 
                 // Return the bundle of variables
                 TaskerPlugin.addVariableBundle( getResultExtras( true ), vars );

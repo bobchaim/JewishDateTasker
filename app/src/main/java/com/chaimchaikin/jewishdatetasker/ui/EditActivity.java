@@ -445,29 +445,25 @@ public final class EditActivity extends AbstractPluginActivity {
                         // Full date
                         "%jd_long\nLong Date\nLong date in English letters (contains \"Eve of\" after sunset) <b>e.g. Eve of 9 Kislev</b>",
                         "%jd_short\nShort Date\nShort date in English letters <b>e.g. 9 Kislev</b>",
-                        // Full Date Hebrew
-                        "%jd_hebrew_long\nLong Date in Hebrew\nLong date in Hebrew letters (contains \"ליל\" after sunset) <b>e.g. ליל ט' כסלב</b>",
-                        "%jd_hebrew_short\nShort Date in Hebrew\nShort date in Hebrew letters <b>e.g. ט' כסלב</b>",
 
                         // Date parts English
                         "%jd_month\nMonth Name\nName of the month in English letters/transliterated <b>e.g. Kislev</b>",
                         "%jd_day\nDay of the Month\nDay of the month as a number <b>e.g. 9</b>",
                         "%jd_year\nYear\nYear as a number <b>e.g. 5775</b>",
-                        // Date parts Hebrew
-                        "%jd_hebrew_month\nMonth Name in Hebrew\nName of the month in Hebrew letters <b>e.g. כסלב</b>",
-                        "%jd_hebrew_day\nDay of the Month in Hebrew\nDay of the month as a Hebrew letter <b>e.g. ט</b>",
-                        "%jd_hebrew_year\nYear in Hebrew\nYear in Hebrew letters",
+
+                        // Parsha
+                        "%jd_parsha\nParsha\nParsha of the week transliterated <b>e.g. Beshalach</b>",
+
+                        // Hebrew
+                        "%jd_hebrew_*\nGet a variable in Hebrew letters\n Use the above variables to get the values in Hebrew<b>e.g. %jd_hebrew_month כסלב</b>",
 
                         // Sunset
                         "%jd_after_sunset\nAfter Sunset\nTrue after sunset (but before midnight) <b>e.g. true</b>",
 
-                        // Parsha
-                        "%jd_parsha\nParsha\nParsha of the week transliterated <b>e.g. Beshalach</b>",
-                        "%jd_hebrew_parsha\nParsha\nParsha of the week in Hebrew <b>e.g. בשלח</b>",
-
                         // Extra info
                         "%jd_desc\nDescription\nFull description includes parsha, special dates and relevant times <b>e.g. Parshat Beshalach</b>",
-                        "%jd_loc\nLocation\nLocation for Zmanim calculations <b>e.g. Brooklyn, New York, USA</b>"
+                        "%jd_loc\nLocation\nLocation for Zmanim calculations <b>e.g. Brooklyn, New York, USA</b>",
+                        "%jd_time_*\nUse these to get Zmanim in 24 Hour format (e.g. 14:20)\nAvailable Zmanim:<br>sunset Sunset<br>cl Candle Lighting<br>hav Havdolah"
                 } );
 
             // Set the result as ok and pass the intent

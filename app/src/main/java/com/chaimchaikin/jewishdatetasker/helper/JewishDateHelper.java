@@ -232,6 +232,24 @@ public class JewishDateHelper {
 
         // Make description available as a variable
         vars.putString("longText", descriptionString);
+
+        /**
+         * Get variables for Zmanim
+         */
+
+        // Get a date format (for time in 24 hour format)
+        SimpleDateFormat zmanimFormat = new SimpleDateFormat("k:m", Locale.US);
+
+        // Get and format the times
+        String zmanimCandleLighting = zmanimFormat.format(czc.getCandleLighting());
+        String zmanimSunset = zmanimFormat.format(czc.getSunset());
+        //Date zmanimHavdolah = zmanimFormat.format(czc.get.??..);
+
+        // Make zmanim available as variables
+        vars.putString("zmanimSunset", zmanimSunset);
+        vars.putString("zmanimCandleLighting", zmanimCandleLighting);
+        //vars.putString("zmanimHavdolah", zmanimHavdolah);
+
     }
 
 
