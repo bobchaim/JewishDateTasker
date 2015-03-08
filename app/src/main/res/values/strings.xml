@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Jewish Date Tasker Plugin</string>
-    <string name="plugin_name">Jewish Date</string>
+    <string name="app_name">Jewish Automator Tasker Plugin</string>
+    <string name="plugin_name">Jewish Tasker</string>
     <string name="use_automatic_location">Automatic Location</string>
     <string name="current_location">Use current location</string>
     <string name="unknown_location">Unknown</string>
