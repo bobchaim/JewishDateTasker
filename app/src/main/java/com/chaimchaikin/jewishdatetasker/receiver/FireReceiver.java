@@ -21,10 +21,12 @@ import android.util.Log;
 import com.chaimchaikin.jewishdatetasker.Constants;
 import com.chaimchaikin.jewishdatetasker.bundle.BundleScrubber;
 import com.chaimchaikin.jewishdatetasker.helper.JewishDateHelper;
+import com.chaimchaikin.jewishdatetasker.helper.LocationHelper;
 import com.chaimchaikin.jewishdatetasker.helper.TaskerPlugin;
 import com.chaimchaikin.jewishdatetasker.ui.EditActivity;
 
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * This is the "fire" BroadcastReceiver for a Locale Plug-in setting.
@@ -85,17 +87,18 @@ public final class FireReceiver extends BroadcastReceiver
             double lng = bundle.getDouble("loc_lng");
             String timezone = bundle.getString("timezone");
 
-
             // If auto location is set, try to find a more up to date location
-            /*if(autoLocation) {
+            if(autoLocation) {
                 LocationHelper locHelper = new LocationHelper(context);
-                locHelper.updateLocation();
 
-                locName = locHelper.locationName;
-                lat = locHelper.lat;
-                lng = locHelper.lng;
-                timezone = locHelper.timezone;
-            }*/
+                String currentLocation = bundle.getString("tasker_location");
+                String[] parts = currentLocation.split(",");
+                lat = Double.parseDouble(parts[0]);
+                lng = Double.parseDouble(parts[1]);
+
+                locName = locHelper.getLocationName(lat, lng);
+                timezone = locHelper.getTimezoneFromLocation(lat, lng);
+            }
 
             // Set the location for the JewishDateHelper
             jewishDate.setLocation(locName, lat, lng, timezone);
@@ -130,9 +133,19 @@ public final class FireReceiver extends BroadcastReceiver
                 vars.putString( "%jd_hebrew_month", jewishDate.vars.getString("hebrewMonth") );
                 vars.putString( "%jd_hebrew_year", jewishDate.vars.getString("hebrewYear") );
 
-                vars.putString( "%jd_zmanim_sunset", jewishDate.vars.getString("zmanimSunset") );
-                vars.putString( "%jd_zmanim_cl", jewishDate.vars.getString("zmanimCandleLighting") );
-                vars.putString( "%jd_zmanim_hav", jewishDate.vars.getString("zmanimHavdolah") );
+
+                // Get a bundle of the zmanim
+                Bundle zmanim = jewishDate.vars.getBundle("zmanim");
+
+                // Loop through all the zmanim
+                Set<String> ks = zmanim.keySet();
+                for (String key: ks) {
+                    // Get the next key
+                    String formattedKey = key.toLowerCase();
+
+                    // Put a variable for each zman
+                    vars.putString( "%jd_zmanim_" + formattedKey, zmanim.getString(key) );
+                }
 
 
                 // Return the bundle of variables

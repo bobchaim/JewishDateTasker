@@ -89,7 +89,15 @@ public class LocationHelper implements LocationListener {
      * Get and store the timezone from the current lat/lng
      */
     public void getTimezone() {
-        timezone = TimeZoneMapper.latLngToTimezoneString(lat, lng);
+        timezone = getTimezoneFromLocation(lat, lng);
+    }
+
+
+    /**
+     * Get and timezone from lat/lng
+     */
+    public String getTimezoneFromLocation(double lat, double lng) {
+        return TimeZoneMapper.latLngToTimezoneString(lat, lng);
     }
 
 

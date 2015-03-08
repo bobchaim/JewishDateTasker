@@ -27,9 +27,12 @@ import com.chaimchaikin.jewishdatetasker.R;
 import com.chaimchaikin.jewishdatetasker.TimeZoneMapper;
 import com.chaimchaikin.jewishdatetasker.bundle.BundleScrubber;
 import com.chaimchaikin.jewishdatetasker.bundle.PluginBundleManager;
+import com.chaimchaikin.jewishdatetasker.helper.JewishDateHelper;
 import com.chaimchaikin.jewishdatetasker.helper.LocationHelper;
 import com.chaimchaikin.jewishdatetasker.helper.TaskerPlugin;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.Set;
 
 /**
  * Edit activity for the Tasker Plug-in.
@@ -425,8 +428,15 @@ public final class EditActivity extends AbstractPluginActivity {
             resultBundle.putString("timezone", settingsLocation.timezone);
             resultBundle.putBoolean("loc_auto", settingLocationAuto);
 
+            // This is to tell tasker to make a variable with the current location
+            resultBundle.putString("tasker_location", "%LOC");
+
             // Add the settings to the intent
             resultIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, resultBundle);
+
+
+            if ( TaskerPlugin.Setting.hostSupportsOnFireVariableReplacement( this ) )
+                TaskerPlugin.Setting.setVariableReplaceKeys( resultBundle, new String [] { "tasker_location" } );
 
             // Set the action timeout to 1 second (to allow time for
             if (  TaskerPlugin.Setting.hostSupportsSynchronousExecution( getIntent().getExtras() ) )
@@ -437,6 +447,25 @@ public final class EditActivity extends AbstractPluginActivity {
              */
             final String blurb = generateBlurb(getApplicationContext(), message);
             resultIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_STRING_BLURB, blurb);
+
+
+            // Loop through available zmanim and add them to one string
+            String availableZmanim = "";
+
+            JewishDateHelper jewishDateHelper = new JewishDateHelper();
+            jewishDateHelper.setLocation(settingsLocation.locationName, settingsLocation.location.latitude, settingsLocation.location.longitude, settingsLocation.timezone);
+            jewishDateHelper.updateDates();
+
+            // Get a bundle of the zmanim
+            Bundle zmanim = jewishDateHelper.vars.getBundle("zmanim");
+
+            // Loop through all the zmanim
+            Set<String> ks = zmanim.keySet();
+            for (String key: ks) {
+                // Add it tp list of zmanim
+                availableZmanim += "<br>" + key.toLowerCase();
+            }
+
 
             // Description of Tasker variables this action makes available
             if ( TaskerPlugin.hostSupportsRelevantVariables( getIntent().getExtras() ) )
@@ -463,7 +492,7 @@ public final class EditActivity extends AbstractPluginActivity {
                         // Extra info
                         "%jd_desc\nDescription\nFull description includes parsha, special dates and relevant times <b>e.g. Parshat Beshalach</b>",
                         "%jd_loc\nLocation\nLocation for Zmanim calculations <b>e.g. Brooklyn, New York, USA</b>",
-                        "%jd_zmanim_*\nUse these to get Zmanim in 24 hour format (e.g. 14:20)\nAvailable Zmanim:<br>_sunset Sunset<br>_cl Candle Lighting"
+                        "%jd_zmanim_*\nUse these to get Zmanim in 24 hour format (e.g. 14:20)\nAvailable Zmanim:" + availableZmanim
                 } );
 
             // Set the result as ok and pass the intent

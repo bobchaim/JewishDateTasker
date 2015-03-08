@@ -2,7 +2,7 @@ package com.chaimchaikin.jewishdatetasker.helper;
 
 import android.os.Bundle;
 
-import net.sourceforge.zmanim.ComplexZmanimCalendar;
+import net.sourceforge.zmanim.ZmanimCalendar;
 import net.sourceforge.zmanim.hebrewcalendar.HebrewDateFormatter;
 import net.sourceforge.zmanim.hebrewcalendar.JewishCalendar;
 import net.sourceforge.zmanim.util.GeoLocation;
@@ -54,7 +54,7 @@ public class JewishDateHelper {
         // Make a location point
         GeoLocation location = new GeoLocation(locationName, locationLat, locationLng, elevation, timeZone);
         // Get a Zmanim Calendar with that location
-        ComplexZmanimCalendar czc = new ComplexZmanimCalendar(location);
+        ZmanimCalendar zmanimCalendar = new ZmanimCalendar(location);
 
 
         /**
@@ -66,7 +66,7 @@ public class JewishDateHelper {
         DateTime currentTime = new DateTime(zone);
 
         // Get the sunset time in a DateTime object for comparison
-        Date sunset = czc.getSunset();
+        Date sunset = zmanimCalendar.getSunset();
         DateTime sunsetTime = new DateTime(sunset);
 
         // Initialize variables for prefixes to add after sunset
@@ -184,7 +184,7 @@ public class JewishDateHelper {
 
 
         // Get and format the candle lighting in a good form
-        Date candleLighting = czc.getCandleLighting();
+        Date candleLighting = zmanimCalendar.getCandleLighting();
         SimpleDateFormat candleLightingFormat = new SimpleDateFormat("h:m", Locale.US);
         String candleLightingTime = candleLightingFormat.format(candleLighting);
 
@@ -249,16 +249,24 @@ public class JewishDateHelper {
         // Get a date format (for time in 24 hour format)
         SimpleDateFormat zmanimFormat = new SimpleDateFormat("k:m", Locale.US);
 
-        // Get and format the times
-        String zmanimCandleLighting = zmanimFormat.format(czc.getCandleLighting());
-        String zmanimSunset = zmanimFormat.format(czc.getSunset());
-        //Date zmanimHavdolah = zmanimFormat.format(czc.get.??..);
+        // Make a new bundle of zmanim
+        Bundle zmanim = new Bundle();
 
-        // Make zmanim available as variables
-        vars.putString("zmanimSunset", zmanimSunset);
-        vars.putString("zmanimCandleLighting", zmanimCandleLighting);
-        //vars.putString("zmanimHavdolah", zmanimHavdolah);
+        // Put zmanim in the bundle
+        zmanim.putString("Sunrise", zmanimFormat.format(zmanimCalendar.getSunrise()) );
+        zmanim.putString("Sunset", zmanimFormat.format(zmanimCalendar.getSunset()));
+        zmanim.putString("Candle_Lighting", zmanimFormat.format(zmanimCalendar.getCandleLighting()));
+        zmanim.putString("Mincha_Ketana", zmanimFormat.format(zmanimCalendar.getMinchaKetana()));
+        zmanim.putString("Mincha_Gedolah", zmanimFormat.format(zmanimCalendar.getMinchaGedola()) );
+        zmanim.putString("Chatzos", zmanimFormat.format(zmanimCalendar.getChatzos()) );
+        zmanim.putString("Sof_Zman_Shma_MGA", zmanimFormat.format(zmanimCalendar.getSofZmanShmaMGA()) );
+        zmanim.putString("Sof_Zman_Shma_GRA", zmanimFormat.format(zmanimCalendar.getSofZmanShmaGRA()) );
+        zmanim.putString("Plag_Hamincha", zmanimFormat.format(zmanimCalendar.getPlagHamincha()) );
+        zmanim.putString("Sof_Zman_Tfila_GRA", zmanimFormat.format(zmanimCalendar.getSofZmanTfilaGRA()) );
+        zmanim.putString("Sof_Zman_Tfila_MGA", zmanimFormat.format(zmanimCalendar.getSofZmanTfilaMGA()) );
 
+        // Make the zmanim available as variables
+        vars.putBundle("zmanim", zmanim);
     }
 
 
