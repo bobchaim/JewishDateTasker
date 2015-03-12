@@ -21,11 +21,11 @@ import android.util.Log;
 import com.chaimchaikin.jewishdatetasker.Constants;
 import com.chaimchaikin.jewishdatetasker.bundle.BundleScrubber;
 import com.chaimchaikin.jewishdatetasker.helper.JewishDateHelper;
-import com.chaimchaikin.jewishdatetasker.helper.LocationHelper;
 import com.chaimchaikin.jewishdatetasker.helper.TaskerPlugin;
 import com.chaimchaikin.jewishdatetasker.ui.EditActivity;
 
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * This is the "fire" BroadcastReceiver for a Locale Plug-in setting.
@@ -70,14 +70,11 @@ public final class FireReceiver extends BroadcastReceiver
 
         if ( isOrderedBroadcast() ) {
 
-
             // Set result OK
             setResultCode(TaskerPlugin.Setting.RESULT_CODE_OK);
 
-
             // Create a new JewishDateHelper to calculate times and dates
             JewishDateHelper jewishDate = new JewishDateHelper();
-
 
             // Initialize Variables to values in settings
             boolean autoLocation = bundle.getBoolean("loc_auto", false);
@@ -88,15 +85,29 @@ public final class FireReceiver extends BroadcastReceiver
 
             // If auto location is set, try to find a more up to date location
             if(autoLocation) {
-                LocationHelper locHelper = new LocationHelper(context);
-
+                // Get the location from the variable
                 String currentLocation = bundle.getString("tasker_location");
+                // Split the location by the comma to get lat and lng
                 String[] parts = currentLocation.split(",");
                 lat = Double.parseDouble(parts[0]);
                 lng = Double.parseDouble(parts[1]);
 
+/*
+                This is slow and possibly useless
+
+                // LocationHelper helps us find location name and timezone
+                LocationHelper locHelper = new LocationHelper(context);
+
+                // Find the location name for this lat/lng
                 locName = locHelper.getLocationName(lat, lng);
+                // Find the timezone for this lat/lng
                 timezone = locHelper.getTimezoneFromLocation(lat, lng);
+*/
+
+                // For the sake of speed use the set timezone and don't bother finding a location name
+                timezone = TimeZone.getDefault().getID();
+                locName = "Automatic";
+
             }
 
             // Set the location for the JewishDateHelper
