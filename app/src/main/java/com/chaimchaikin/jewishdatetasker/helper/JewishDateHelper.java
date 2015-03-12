@@ -140,6 +140,9 @@ public class JewishDateHelper {
            Store the variables
          */
 
+        // Parsha
+        vars.putBundle("parsha", getParsha(jewishDate, englishDate));
+
         // All date possibilities
         vars.putBundle("date", getDates(jewishDate, afterSunset));
 
@@ -200,9 +203,9 @@ public class JewishDateHelper {
         dateParts.putString("year", String.valueOf(jewishDate.getJewishYear()));
 
         // Hebrew date parts TODO: get day and year in hebrew
-        dateParts.putString("hebrew_month", dateFormatterHebrew.formatMonth(jewishDate));
-        //dateParts.putString("hebrew_day", String.valueOf(jewishDate.getJewishDayOfMonth()));
-        //dateParts.putString("hebrew_year", String.valueOf(jewishDate.getJewishYear()));
+        dateParts.putString("month_hebrew", dateFormatterHebrew.formatMonth(jewishDate));
+        //dateParts.putString("day_hebrew", String.valueOf(jewishDate.getJewishDayOfMonth()));
+        //dateParts.putString("year_hebrew", String.valueOf(jewishDate.getJewishYear()));
 
         return dateParts;
     }
@@ -304,31 +307,18 @@ public class JewishDateHelper {
         SimpleDateFormat candleLightingFormat = new SimpleDateFormat("h:m", Locale.US);
         String candleLightingTime = candleLightingFormat.format(candleLighting);
 
-
         // Show candle lighting only on 6th day of Hebrew Week (after midnight)
         if(jewishDate.getDayOfWeek() == 6 && !afterSunset) {
             descriptionString += "Candle Lighting: " + candleLightingTime;
             descriptionString += ", ";
         }
 
-        JewishCalendar jewishDateShabbos = getJewishDateShabbos(jewishDate, englishDate);
-
-        // Get the parsha in hebrew and english
-        String englishParsha = dateFormatterEnglish.formatParsha(jewishDateShabbos);
-        String hebrewParsha = jewishDateShabbos.toString();
+        // Get the english parsha
+        String englishParsha = getParsha(jewishDate, englishDate).getString("english");
 
         // Add the parsha to the description string
         descriptionString += "Parshas " + englishParsha;
 
-        // Make a new bundle for the parsha
-        Bundle parsha = new Bundle();
-
-        // Make the parsha in English/Hebrew available as variables
-        parsha.putString("english", englishParsha);
-        parsha.putString("hebrew", hebrewParsha);
-
-        // Add the parsha bundle as vars
-        vars.putBundle("parsha", parsha);
 
         // Yom Tov or fast day
         if (jewishDate.isYomTov() || jewishDate.isTaanis()) {
@@ -336,18 +326,16 @@ public class JewishDateHelper {
 
             descriptionString += dateFormatterEnglish.formatYomTov(jewishDate);
         }
-
 /*
         // TODO: On a fast day show fast starting/ending times
         if(jewishDate.isTaanis()) {
-
             descriptionString += ", ";
-
         }
 */
         // Chanukah
         if (jewishDate.isChanukah()) {
             descriptionString += ", ";
+            // The day number of Chanukah + suffix for that number (e.g. nd for 2nd) + day/night + / of Chanukah
             descriptionString += jewishDate.getDayOfChanukah() + appendInt(jewishDate.getDayOfChanukah()) + " " + getDayOrNight(afterSunset) +  " of Chanukah";
         }
         // Rosh Chodesh
@@ -362,6 +350,30 @@ public class JewishDateHelper {
         }
 
         return descriptionString;
+    }
+
+    /**
+     * Get the parsha in English and Hebrew for a given date
+     *
+     * @param jewishDate current Jewish Date
+     * @param englishDate current English Date
+     * @return Bundle with the parsha in English and Hebrew
+     */
+    protected Bundle getParsha(JewishCalendar jewishDate, Calendar englishDate) {
+        JewishCalendar jewishDateShabbos = getJewishDateShabbos(jewishDate, englishDate);
+
+        // Get the parsha in hebrew and english
+        String englishParsha = dateFormatterEnglish.formatParsha(jewishDateShabbos);
+        String hebrewParsha = jewishDateShabbos.toString();
+
+        // Make a new bundle for the parsha
+        Bundle parsha = new Bundle();
+
+        // Make the parsha in English/Hebrew available as variables
+        parsha.putString("english", englishParsha);
+        parsha.putString("hebrew", hebrewParsha);
+
+        return parsha;
     }
 
     /**
@@ -392,7 +404,6 @@ public class JewishDateHelper {
 
         return zmanim;
     }
-
 
     /**
      * Returns the correct suffix for a given number (e.g. 1st, 2nd, 23rd, 12th etc.)
