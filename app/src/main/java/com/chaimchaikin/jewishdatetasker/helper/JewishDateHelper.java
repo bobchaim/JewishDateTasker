@@ -32,6 +32,31 @@ public class JewishDateHelper {
     public Bundle vars = new Bundle();
 
 
+    // We'll need these later on
+    HebrewDateFormatter dateFormatterHebrew;
+    HebrewDateFormatter dateFormatterEnglish;
+
+
+    public JewishDateHelper() {
+        /**
+         * Create formatters for the date
+         */
+
+        // In hebrew
+        dateFormatterHebrew = new HebrewDateFormatter();
+        dateFormatterHebrew.setHebrewFormat(true);
+        // And english
+        dateFormatterEnglish = new HebrewDateFormatter();
+    }
+
+    /**
+     * Allow to set location from out of the class
+     *
+     * @param name Location name
+     * @param lat Latitude
+     * @param lng Longitude
+     * @param tZ Timezone
+     */
     public void setLocation(String name, double lat, double lng, String tZ) {
         locationName = name;
         locationLat = lat;
@@ -41,24 +66,30 @@ public class JewishDateHelper {
     }
 
 
+    /**
+     * Update dates and create variables with all possible information
+     */
     public void updateDates() {
 
+        /*
+          Get our location and make a new Zmanim Calendar for that location
+         */
 
         // Make an english calendar with the current date in the required timezone
         Calendar englishDate = Calendar.getInstance();
         englishDate.setTimeZone(timeZone);
 
-        double elevation = 0; // Use 0 as the elevation always
-
+        double elevation = 0; // Use 0 as the elevation always for now
 
         // Make a location point
         GeoLocation location = new GeoLocation(locationName, locationLat, locationLng, elevation, timeZone);
+
         // Get a Zmanim Calendar with that location
         ZmanimCalendar zmanimCalendar = new ZmanimCalendar(location);
 
 
-        /**
-         * See if we are after sunset
+        /*
+          See if we are after sunset
          */
 
         // Get a DateTime object with current times for the timezone we're dealing with
@@ -69,47 +100,20 @@ public class JewishDateHelper {
         Date sunset = zmanimCalendar.getSunset();
         DateTime sunsetTime = new DateTime(sunset);
 
-        // Initialize variables for prefixes to add after sunset
-        String evePrefixHebrew = "";
-        String evePrefixEnglish = "";
-
-        // Day or night, useful for calling the day correctly in description of holidays
-        // E.g. 1st Night of Chanukah (after sunset) vs 1st Day of Chanukah (after midnight)
-        String dayOrNight;
-
         // Is it after sunset or not?
-        boolean afterSunset;
+        boolean afterSunset = afterSunset(currentTime, sunsetTime);
 
         // If after sunset then
-        if (currentTime.isAfter(sunsetTime)) {
-
-            // Set the "eve" prefix
-            evePrefixEnglish += "Eve of ";
-            evePrefixHebrew = "ליל ";
-
-            // Set it to be after sunset
-            afterSunset = true;
-
+        if (afterSunset) {
             // Go to the next day
             // (Since we get the hebrew date from the english date, we want to get the hebrew date for
             // the next day as it is after sunset)
             englishDate.add(Calendar.DATE, 1);
-
-            // Set it to night
-            dayOrNight = "Night";
-        } else {
-            // Set to day
-            dayOrNight = "Day";
-
-            // Is not after sunset
-            afterSunset = false;
         }
 
-        // Store afterSunset as an accessible var
-        vars.putBoolean("afterSunset", afterSunset);
 
-        /**
-         * Find the Jewish Date
+        /*
+          Find the Jewish Date
          */
 
         // Make a new jewish date calendar
@@ -118,70 +122,182 @@ public class JewishDateHelper {
         jewishDate.setDate(englishDate);
 
 
-        /**
-         * Find the date for this coming Shabbos
-         *
-         * JewishCalendar can only get the parsha for the date of Shabbos itself
-         * So we work out the date for the coming Shabbos
-         *
-        */
-
-        // Make a calendar for finding the date for the coming Shabbos
-        JewishCalendar jewishDateShabbos = new JewishCalendar();
-
-        // Copy the current english date
-        Calendar englishDateShabbos = englishDate;
-
-        // Work out how many days to Shabbos (7 days in the week - day of the week)
-        int daysToShabbos = 7 - jewishDate.getDayOfWeek();
-        // Add days until we get to Shabbos
-        englishDateShabbos.add(Calendar.DATE, daysToShabbos);
-
-        // Set the Jewish date for shabbos
-        jewishDateShabbos.setDate(englishDateShabbos);
-
-
-        /**
-         * Create formatters for the date
+        /*
+            All other variables
          */
 
-        // In hebrew
-        HebrewDateFormatter dateFormatterHebrew = new HebrewDateFormatter();
-        dateFormatterHebrew.setHebrewFormat(true);
-        // And english
-        HebrewDateFormatter dateFormatterEnglish = new HebrewDateFormatter();
+        // Store all misc vars in separate bundle
+        Bundle misc = new Bundle();
+
+        // Description of date
+        misc.putString("desc", getDescription(jewishDate, englishDate, zmanimCalendar, afterSunset));
+
+        // If it's currently after sunset
+        misc.putBoolean("afterSunset", afterSunset);
 
 
-        /**
-         * Get and save variables for the date
+        /*
+           Store the variables
          */
+
+        // All date possibilities
+        vars.putBundle("date", getDates(jewishDate, afterSunset));
+
+        // Date parts
+        vars.putBundle("dp", getDateParts(jewishDate));
+
+        // Misc vars
+        vars.putBundle("misc", misc);
+
+        // Zmanim
+        vars.putBundle("zmanim", getZmanim(zmanimCalendar));
+    }
+
+    /**
+     * Get date in different formats and languages
+     *
+     * @param jewishDate current Jewish Date
+     * @param afterSunset are we after sunset (but before midnight)
+     * @return Bundle with date in long and short form in English and Hebrew
+     */
+    protected Bundle getDates(JewishCalendar jewishDate, boolean afterSunset) {
+
+        Bundle dates = new Bundle();
 
         // Get the short date (just day of month and month name)
         String shortDate =  jewishDate.getJewishDayOfMonth() + " " + dateFormatterEnglish.formatMonth(jewishDate);
 
         // Get the long date (add possible "eve" prefix to short date)
-        String longDate = evePrefixEnglish + shortDate;
+        String longDate = getEvePrefixEnglish(afterSunset) + shortDate;
 
         // Make English dates available as variables
-        vars.putString("shortDate", shortDate);
-        vars.putString("longDate", longDate);
+        dates.putString("short", shortDate);
+        dates.putString("long", longDate);
 
         // Make hebrew date strings
         String shortHebrewDate = dateFormatterHebrew.format(jewishDate);
-        String longHebrewDate = evePrefixHebrew + shortHebrewDate;
+        String longHebrewDate = getEvePrefixHebrew(afterSunset) + shortHebrewDate;
 
         // Make Hebrew dates available as variables
-        vars.putString("shortHebrewDate", shortHebrewDate);
-        vars.putString("longHebrewDate", longHebrewDate);
+        dates.putString("short_hebrew", shortHebrewDate);
+        dates.putString("long_hebrew", longHebrewDate);
+
+        return dates;
+    }
+
+    /**
+     * Get the Jewish Date in parts (month, year, day) in English and Hebrew
+     *
+     * @param jewishDate current Jewish Date
+     * @return Bundle with parts of Jewish Date
+     */
+    protected Bundle getDateParts(JewishCalendar jewishDate) {
+        Bundle dateParts = new Bundle();
+
+        // English date parts
+        dateParts.putString("month", dateFormatterEnglish.formatMonth(jewishDate));
+        dateParts.putString("day", String.valueOf(jewishDate.getJewishDayOfMonth()));
+        dateParts.putString("year", String.valueOf(jewishDate.getJewishYear()));
+
+        // Hebrew date parts TODO: get day and year in hebrew
+        dateParts.putString("hebrew_month", dateFormatterHebrew.formatMonth(jewishDate));
+        //dateParts.putString("hebrew_day", String.valueOf(jewishDate.getJewishDayOfMonth()));
+        //dateParts.putString("hebrew_year", String.valueOf(jewishDate.getJewishYear()));
+
+        return dateParts;
+    }
+
+    /**
+     * Get a hebrew/english prefix to append to the date if we are after sunset
+     * TODO: replace with string
+     */
+
+    /**
+     * @param afterSunset are we after sunset (but before midnight)
+     * @return English prefix if after sunset
+     */
+    protected String getEvePrefixEnglish(boolean afterSunset) {
+        if(afterSunset) return "Eve of ";
+        else return "";
+    }
+
+    /**
+     * @param afterSunset are we after sunset (but before midnight)
+     * @return Hebrew prefix if after sunset
+     */
+    protected String getEvePrefixHebrew(boolean afterSunset) {
+        if(afterSunset) return "ליל ";
+        else return "";
+    }
+
+    /**
+     * Check if we are currently after sunset
+     *
+     * @param currentTime current time
+     * @param sunsetTime time of sunset
+     * @return true if current time is after sunset time
+     */
+    protected boolean afterSunset(DateTime currentTime, DateTime sunsetTime) {
+        return currentTime.isAfter(sunsetTime);
+    }
 
 
-        /**
-         * Check for any special days to add as a description
-         */
+    /**
+     * Find the date for this coming Shabbos
+     *
+     * JewishCalendar can only get the parsha for the date of Shabbos itself
+     * So we work out the date for the coming Shabbos
+     *
+     * @param jewishDate current Jewish Date
+     * @param englishDate current English Date
+     * @return Jewish Date of upcoming Shabbos
+     */
+    protected JewishCalendar getJewishDateShabbos(JewishCalendar jewishDate, Calendar englishDate) {
+        // Make a calendar for finding the date for the coming Shabbos
+        JewishCalendar jewishDateShabbos = new JewishCalendar();
+
+        // Work out how many days to Shabbos (7 days in the week - day of the week)
+        int daysToShabbos = 7 - jewishDate.getDayOfWeek();
+        // Add days until we get to Shabbos
+        englishDate.add(Calendar.DATE, daysToShabbos);
+
+        // Set the Jewish date for shabbos
+        jewishDateShabbos.setDate(englishDate);
+
+        return jewishDateShabbos;
+    }
+
+    /**
+     * Day or night, useful for calling the day correctly in description of holidays
+     * E.g. 1st Night of Chanukah (after sunset) vs 1st Day of Chanukah (after midnight)
+     *
+     * @param afterSunset are we after sunset (but before midnight)
+     * @return Night if afterSunset is true, Day if false
+     */
+    protected String getDayOrNight(boolean afterSunset) {
+        if(afterSunset) {
+            return "Night";
+        } else {
+            return "Day";
+        }
+    }
+
+    /**
+     * Get an informative description of the current date
+     * - Parsha of the week
+     * - Candle lighting time (on Friday)
+     * - Rosh Chodesh, Yom Tov, Omer etc. (if present)
+     *
+     * @param jewishDate current Jewish Date
+     * @param englishDate current English Date
+     * @param zmanimCalendar a ZmanimCalendar with the date to get zmanim for
+     * @param afterSunset are we after sunset (but before midnight)
+     * @return String with description of date
+     */
+    protected String getDescription(JewishCalendar jewishDate, Calendar englishDate, ZmanimCalendar zmanimCalendar, boolean afterSunset) {
 
         // Initialize description string
         String descriptionString = "";
-
 
         // Get and format the candle lighting in a good form
         Date candleLighting = zmanimCalendar.getCandleLighting();
@@ -195,6 +311,8 @@ public class JewishDateHelper {
             descriptionString += ", ";
         }
 
+        JewishCalendar jewishDateShabbos = getJewishDateShabbos(jewishDate, englishDate);
+
         // Get the parsha in hebrew and english
         String englishParsha = dateFormatterEnglish.formatParsha(jewishDateShabbos);
         String hebrewParsha = jewishDateShabbos.toString();
@@ -202,10 +320,15 @@ public class JewishDateHelper {
         // Add the parsha to the description string
         descriptionString += "Parshas " + englishParsha;
 
-        // Make the parsha in English/Hebrew available as variables
-        vars.putString("englishParsha", englishParsha);
-        vars.putString("hebrewParsha", hebrewParsha);
+        // Make a new bundle for the parsha
+        Bundle parsha = new Bundle();
 
+        // Make the parsha in English/Hebrew available as variables
+        parsha.putString("english", englishParsha);
+        parsha.putString("hebrew", hebrewParsha);
+
+        // Add the parsha bundle as vars
+        vars.putBundle("parsha", parsha);
 
         // Yom Tov or fast day
         if (jewishDate.isYomTov() || jewishDate.isTaanis()) {
@@ -222,11 +345,10 @@ public class JewishDateHelper {
 
         }
 */
-
         // Chanukah
         if (jewishDate.isChanukah()) {
             descriptionString += ", ";
-            descriptionString += jewishDate.getDayOfChanukah() + appendInt(jewishDate.getDayOfChanukah()) + " " + dayOrNight +  " of Chanukah";
+            descriptionString += jewishDate.getDayOfChanukah() + appendInt(jewishDate.getDayOfChanukah()) + " " + getDayOrNight(afterSunset) +  " of Chanukah";
         }
         // Rosh Chodesh
         if (jewishDate.isRoshChodesh()) {
@@ -239,13 +361,16 @@ public class JewishDateHelper {
             descriptionString += dateFormatterHebrew.formatOmer(jewishDate);
         }
 
-        // Make description available as a variable
-        vars.putString("longText", descriptionString);
+        return descriptionString;
+    }
 
-        /**
-         * Get variables for Zmanim
-         */
-
+    /**
+     * Gets zmanim based on a given Zmanim Calendar
+     *
+     * @param zmanimCalendar a ZmanimCalendar with the date to get zmanim for
+     * @return a Bundle containing times for zmanim
+     */
+    protected Bundle getZmanim(ZmanimCalendar zmanimCalendar) {
         // Get a date format (for time in 24 hour format)
         SimpleDateFormat zmanimFormat = new SimpleDateFormat("k:m", Locale.US);
 
@@ -265,12 +390,17 @@ public class JewishDateHelper {
         zmanim.putString("Sof_Zman_Tfila_GRA", zmanimFormat.format(zmanimCalendar.getSofZmanTfilaGRA()) );
         zmanim.putString("Sof_Zman_Tfila_MGA", zmanimFormat.format(zmanimCalendar.getSofZmanTfilaMGA()) );
 
-        // Make the zmanim available as variables
-        vars.putBundle("zmanim", zmanim);
+        return zmanim;
     }
 
 
-    public static String appendInt(int number) {
+    /**
+     * Returns the correct suffix for a given number (e.g. 1st, 2nd, 23rd, 12th etc.)
+     *
+     * @param number number to find suffix for
+     * @return correct suffix
+     */
+    protected static String appendInt(int number) {
         String value = String.valueOf(number);
         if(value.length() > 1) {
             // Check for special case: 11 - 13 are all "th".

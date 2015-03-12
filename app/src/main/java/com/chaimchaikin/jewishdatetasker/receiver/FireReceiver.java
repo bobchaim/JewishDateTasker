@@ -26,7 +26,6 @@ import com.chaimchaikin.jewishdatetasker.helper.TaskerPlugin;
 import com.chaimchaikin.jewishdatetasker.ui.EditActivity;
 
 import java.util.Locale;
-import java.util.Set;
 
 /**
  * This is the "fire" BroadcastReceiver for a Locale Plug-in setting.
@@ -111,42 +110,36 @@ public final class FireReceiver extends BroadcastReceiver
 
                 // Create a new bundle
                 Bundle vars = new Bundle();
-                // Add all the variables to return
-                vars.putString( "%jd_short", jewishDate.vars.getString("shortDate") );
-                vars.putString( "%jd_long", jewishDate.vars.getString("longDate") );
-                vars.putString( "%jd_hebrew_short", jewishDate.vars.getString("shortHebrewDate") );
-                vars.putString( "%jd_hebrew_long", jewishDate.vars.getString("longHebrewDate") );
 
-                vars.putString( "%jd_desc", jewishDate.vars.getString("longText") );
-                vars.putString( "%jd_loc", locName );
+                // Prefix for all variables
+                String varPrefix = "%jewish_";
 
-                vars.putBoolean( "%jd_after_sunset", jewishDate.vars.getBoolean("afterSunset") );
+                // Loop through all the bundles in the main vars bundle
+                for (String bundleKey: jewishDate.vars.keySet()) {
 
-                vars.putString( "%jd_parsha", jewishDate.vars.getString("englishParsha") );
-                vars.putString( "%jd_hebrew_parsha", jewishDate.vars.getString("hebrewParsha") );
+                    // Format the bundle key for the variable name
+                    String formattedBundleKey = bundleKey.toLowerCase() + "_";
 
-                vars.putString( "%jd_day", jewishDate.vars.getString("englishDay") );
-                vars.putString( "%jd_month", jewishDate.vars.getString("englishMonth") );
-                vars.putString( "%jd_year", jewishDate.vars.getString("englishYear") );
+                    // Items in the misc bundle don't get a prefix in the variable name
+                    if(bundleKey.equals("misc")) formattedBundleKey = "";
 
-                vars.putString( "%jd_hebrew_day", jewishDate.vars.getString("hebrewDay") );
-                vars.putString( "%jd_hebrew_month", jewishDate.vars.getString("hebrewMonth") );
-                vars.putString( "%jd_hebrew_year", jewishDate.vars.getString("hebrewYear") );
+                    // Get the bundle we are dealing with
+                    Bundle thisBundle = jewishDate.vars.getBundle(bundleKey);
+
+                    // Loop through that bundle
+                    for (String varKey: thisBundle.keySet()) {
+
+                        // Get the next key formatted for variable name
+                        String formattedKey = varKey.toLowerCase();
 
 
-                // Get a bundle of the zmanim
-                Bundle zmanim = jewishDate.vars.getBundle("zmanim");
-
-                // Loop through all the zmanim
-                Set<String> ks = zmanim.keySet();
-                for (String key: ks) {
-                    // Get the next key
-                    String formattedKey = key.toLowerCase();
-
-                    // Put a variable for each zman
-                    vars.putString( "%jd_zmanim_" + formattedKey, zmanim.getString(key) );
+                        // Put a variable for each date part
+                        vars.putString(varPrefix + formattedBundleKey + formattedKey, String.valueOf(thisBundle.get(varKey)));
+                    }
                 }
 
+                // Location doesn't come from the bundle of vars so add it now
+                vars.putString( varPrefix + "loc", locName );
 
                 // Return the bundle of variables
                 TaskerPlugin.addVariableBundle( getResultExtras( true ), vars );
