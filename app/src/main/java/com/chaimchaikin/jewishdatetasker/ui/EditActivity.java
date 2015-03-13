@@ -468,20 +468,21 @@ public final class EditActivity extends AbstractPluginActivity {
 
 
             String varPrefix = "%jewish_";
+            String dateVarPrefix = varPrefix + "date_";
+            String datePartsVarPrefix = varPrefix + "dp_";
 
             // Description of Tasker variables this action makes available
             if ( TaskerPlugin.hostSupportsRelevantVariables( getIntent().getExtras() ) )
                 TaskerPlugin.addRelevantVariableList( resultIntent, new String [] {
 
                         // Full date
-                        varPrefix + "date_long\nLong Date\n<b>long</b>The date in English (contains \"Eve of\" after sunset) <b>e.g. Eve of 9 Kislev</b>",
-                        varPrefix + "date_short\nShort Date\n<b>long</b>The date in English (only month and day) <b>e.g. Eve of 9 Kislev</b>",
-                        varPrefix + "date_*_hebrew\nJewish Date in Hebrew\nThe date in Hebrew (use <b>long</b> or <b>short</b>)",
-
+                        dateVarPrefix + "long\nLong Date\n<b>long</b>The date in English (contains \"Eve of\" after sunset) <b>e.g. Eve of 9 Kislev</b>",
+                        dateVarPrefix + "short\nShort Date\n<b>long</b>The date in English (only month and day) <b>e.g. Eve of 9 Kislev</b>",
+                        dateVarPrefix + "*_hebrew\nJewish Date in Hebrew\nThe date in Hebrew (use <b>long</b> or <b>short</b>)",
 
                         // Date parts English
-                        varPrefix + "dp_*\nDate Parts\nDate in English in separate variables<br>Available variables:<br>month<br>day<br>year",
-                        varPrefix + "dp_*_hebrew\nDate Parts in Hebrew\nDate parts in Hebrew<br>Same variables available as above",
+                        datePartsVarPrefix + "_*\nDate Parts\nDate in English in separate variables<br>Available variables:<br>month<br>day<br>year",
+                        datePartsVarPrefix + "_*_hebrew\nDate Parts in Hebrew\nDate parts in Hebrew<br>Same variables available as above",
 
                         // Zmanim
                         varPrefix + "zmanim_*\nUse these to get Zmanim as a timestamp in seconds-since-the-epoch (can be used as a variable in a Time Context or converted to Date Time)\nAvailable Zmanim:" + availableZmanim,
