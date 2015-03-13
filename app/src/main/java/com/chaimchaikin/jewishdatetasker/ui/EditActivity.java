@@ -484,7 +484,7 @@ public final class EditActivity extends AbstractPluginActivity {
                         varPrefix + "dp_*_hebrew\nDate Parts in Hebrew\nDate parts in Hebrew<br>Same variables available as above",
 
                         // Zmanim
-                        varPrefix + "zmanim_*\nUse these to get Zmanim in 24 hour format (e.g. 14:20)\nAvailable Zmanim:" + availableZmanim,
+                        varPrefix + "zmanim_*\nUse these to get Zmanim as a timestamp in seconds-since-the-epoch (can be used as a variable in a Time Context or converted to Date Time)\nAvailable Zmanim:" + availableZmanim,
 
                         // Parsha
                         varPrefix + "parsha\nParsha\nParsha of the week in English (add _hebrew for Hebrew) <b>e.g. Beshalach</b>",

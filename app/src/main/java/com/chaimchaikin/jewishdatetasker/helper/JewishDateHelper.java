@@ -23,12 +23,14 @@ import java.util.TimeZone;
  */
 public class JewishDateHelper {
 
+    // Location details
     String locationName = "";
     double locationLat = 0;
     double locationLng = 0;
     TimeZone timeZone;
 
 
+    // Setup a Bundle for storing all of our vars
     public Bundle vars = new Bundle();
 
 
@@ -383,26 +385,35 @@ public class JewishDateHelper {
      * @return a Bundle containing times for zmanim
      */
     protected Bundle getZmanim(ZmanimCalendar zmanimCalendar) {
-        // Get a date format (for time in 24 hour format)
-        SimpleDateFormat zmanimFormat = new SimpleDateFormat("k:m", Locale.US);
 
         // Make a new bundle of zmanim
         Bundle zmanim = new Bundle();
 
         // Put zmanim in the bundle
-        zmanim.putString("Sunrise", zmanimFormat.format(zmanimCalendar.getSunrise()) );
-        zmanim.putString("Sunset", zmanimFormat.format(zmanimCalendar.getSunset()));
-        zmanim.putString("Candle_Lighting", zmanimFormat.format(zmanimCalendar.getCandleLighting()));
-        zmanim.putString("Mincha_Ketana", zmanimFormat.format(zmanimCalendar.getMinchaKetana()));
-        zmanim.putString("Mincha_Gedolah", zmanimFormat.format(zmanimCalendar.getMinchaGedola()) );
-        zmanim.putString("Chatzos", zmanimFormat.format(zmanimCalendar.getChatzos()) );
-        zmanim.putString("Sof_Zman_Shma_MGA", zmanimFormat.format(zmanimCalendar.getSofZmanShmaMGA()) );
-        zmanim.putString("Sof_Zman_Shma_GRA", zmanimFormat.format(zmanimCalendar.getSofZmanShmaGRA()) );
-        zmanim.putString("Plag_Hamincha", zmanimFormat.format(zmanimCalendar.getPlagHamincha()) );
-        zmanim.putString("Sof_Zman_Tfila_GRA", zmanimFormat.format(zmanimCalendar.getSofZmanTfilaGRA()) );
-        zmanim.putString("Sof_Zman_Tfila_MGA", zmanimFormat.format(zmanimCalendar.getSofZmanTfilaMGA()) );
+        zmanim.putString("Sunrise", getTimestampStringFromDate(zmanimCalendar.getSunrise()) );
+        zmanim.putString("Sunset", getTimestampStringFromDate(zmanimCalendar.getSunset()));
+        zmanim.putString("Candle_Lighting", getTimestampStringFromDate(zmanimCalendar.getCandleLighting()));
+        zmanim.putString("Mincha_Ketana", getTimestampStringFromDate(zmanimCalendar.getMinchaKetana()));
+        zmanim.putString("Mincha_Gedolah", getTimestampStringFromDate(zmanimCalendar.getMinchaGedola()) );
+        zmanim.putString("Chatzos", getTimestampStringFromDate(zmanimCalendar.getChatzos()) );
+        zmanim.putString("Sof_Zman_Shma_MGA", getTimestampStringFromDate(zmanimCalendar.getSofZmanShmaMGA()) );
+        zmanim.putString("Sof_Zman_Shma_GRA", getTimestampStringFromDate(zmanimCalendar.getSofZmanShmaGRA()) );
+        zmanim.putString("Plag_Hamincha", getTimestampStringFromDate(zmanimCalendar.getPlagHamincha()) );
+        zmanim.putString("Sof_Zman_Tfila_GRA", getTimestampStringFromDate(zmanimCalendar.getSofZmanTfilaGRA()) );
+        zmanim.putString("Sof_Zman_Tfila_MGA", getTimestampStringFromDate(zmanimCalendar.getSofZmanTfilaMGA()) );
 
         return zmanim;
+    }
+
+    /**
+     * Get a Timestamp (since epoch) in seconds for a given date/time as a String
+     *
+     * @param date date/time to calculate timestamp for
+     * @return String with Timestamp
+     */
+    protected String getTimestampStringFromDate(Date date) {
+        // Get seconds of the time by getting milliseconds divided by 1000 and return as String
+        return String.valueOf(new DateTime(date).getMillis() / 1000);
     }
 
     /**
