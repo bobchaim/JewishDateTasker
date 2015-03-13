@@ -467,33 +467,36 @@ public final class EditActivity extends AbstractPluginActivity {
             }
 
 
+            String varPrefix = "%jewish_";
+
             // Description of Tasker variables this action makes available
             if ( TaskerPlugin.hostSupportsRelevantVariables( getIntent().getExtras() ) )
                 TaskerPlugin.addRelevantVariableList( resultIntent, new String [] {
 
                         // Full date
-                        "%jd_long\nLong Date\nLong date in English letters (contains \"Eve of\" after sunset) <b>e.g. Eve of 9 Kislev</b>",
-                        "%jd_short\nShort Date\nShort date in English letters <b>e.g. 9 Kislev</b>",
+                        varPrefix + "date_long\nLong Date\n<b>long</b>The date in English (contains \"Eve of\" after sunset) <b>e.g. Eve of 9 Kislev</b>",
+                        varPrefix + "date_short\nShort Date\n<b>long</b>The date in English (only month and day) <b>e.g. Eve of 9 Kislev</b>",
+                        varPrefix + "date_*_hebrew\nJewish Date in Hebrew\nThe date in Hebrew (use <b>long</b> or <b>short</b>)",
+
 
                         // Date parts English
-                        "%jd_month\nMonth Name\nName of the month in English letters/transliterated <b>e.g. Kislev</b>",
-                        "%jd_day\nDay of the Month\nDay of the month as a number <b>e.g. 9</b>",
-                        "%jd_year\nYear\nYear as a number <b>e.g. 5775</b>",
+                        varPrefix + "dp_*\nDate Parts\nDate in English in separate variables<br>Available variables:<br>month<br>day<br>year",
+                        varPrefix + "dp_*_hebrew\nDate Parts in Hebrew\nDate parts in Hebrew<br>Same variables available as above",
+
+                        // Zmanim
+                        varPrefix + "zmanim_*\nUse these to get Zmanim in 24 hour format (e.g. 14:20)\nAvailable Zmanim:" + availableZmanim,
 
                         // Parsha
-                        "%jd_parsha\nParsha\nParsha of the week transliterated <b>e.g. Beshalach</b>",
-
-                        // Hebrew
-                        "%jd_hebrew_*\nGet a variable in Hebrew letters\n Use the above variables to get the values in Hebrew <b>e.g. %jd_hebrew_month כסלב</b>",
+                        varPrefix + "parsha\nParsha\nParsha of the week in English (add _hebrew for Hebrew) <b>e.g. Beshalach</b>",
 
                         // Sunset
-                        "%jd_after_sunset\nAfter Sunset\nTrue after sunset (but before midnight) <b>e.g. true</b>",
+                        varPrefix + "after_sunset\nAfter Sunset\nTrue after sunset (but before midnight) otherwise false <b>e.g. true or false</b>",
 
                         // Extra info
-                        "%jd_desc\nDescription\nFull description includes parsha, special dates and relevant times <b>e.g. Parshat Beshalach</b>",
-                        "%jd_loc\nLocation\nLocation for Zmanim calculations <b>e.g. Brooklyn, New York, USA</b>",
-                        "%jd_zmanim_*\nUse these to get Zmanim in 24 hour format (e.g. 14:20)\nAvailable Zmanim:" + availableZmanim
-                } );
+                        varPrefix + "desc\nDescription\nFull description includes parsha, special dates and relevant times <b>e.g. Parshat Beshalach</b>",
+                        varPrefix + "loc\nLocation\nLocation being used for Zmanim/Date calculations <b>e.g. Brooklyn, New York, USA</b>"
+
+                    } );
 
             // Set the result as ok and pass the intent
             setResult(RESULT_OK, resultIntent);
