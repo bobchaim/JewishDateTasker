@@ -112,11 +112,12 @@ public final class EditActivity extends AbstractPluginActivity {
                 // Get location point from previous plugin settings
                 double lat = localeBundle.getDouble("loc_lat", 0);
                 double lng = localeBundle.getDouble("loc_lng", 0);
+                double alt = localeBundle.getDouble("loc_alt", 0);
                 String locationName = localeBundle.getString("loc_name");
                 String timezone = localeBundle.getString("timezone");
 
                 // Set the settings location as a new LocationPoint with the location information just retrieved
-                settingsLocation = new LocationPoint(new LatLng(lat,lng), locationName, timezone);
+                settingsLocation = new LocationPoint(new LatLng(lat,lng), locationName, timezone, alt);
                 settingLocationAuto = localeBundle.getBoolean("loc_auto", false);
 
                 // Since there is a location set already enable the "current location" button
@@ -192,6 +193,7 @@ public final class EditActivity extends AbstractPluginActivity {
             // Get lat/lng from chosen location
             double lat = data.getDoubleExtra("lat", 0);
             double lng = data.getDoubleExtra("lng", 0);
+            double alt = data.getDoubleExtra("alt", 0);
 
             // Make a LatLng object
             LatLng locationPoint = new LatLng(lat, lng);
@@ -203,7 +205,7 @@ public final class EditActivity extends AbstractPluginActivity {
             setAutoLocation(false, true);
 
             // Save this location to the settings
-            settingsLocation = new LocationPoint(locationPoint, locationName, getTimezone(locationPoint));
+            settingsLocation = new LocationPoint(locationPoint, locationName, getTimezone(locationPoint), alt);
 
             // Update TextView of location shown to user
             locationNameTextView.setText(locationName);
@@ -280,7 +282,7 @@ public final class EditActivity extends AbstractPluginActivity {
      */
     public void setSettingsForCurrentLocation() {
         LatLng location = new LatLng(locHelper.lat, locHelper.lng);
-        settingsLocation = new LocationPoint(location, locHelper.locationName, getTimezone(location));
+        settingsLocation = new LocationPoint(location, locHelper.locationName, getTimezone(location), locHelper.alt);
     }
 
 
@@ -424,6 +426,7 @@ public final class EditActivity extends AbstractPluginActivity {
             // All the plugin action settings
             resultBundle.putDouble("loc_lat", settingsLocation.location.latitude);
             resultBundle.putDouble("loc_lng", settingsLocation.location.longitude);
+            resultBundle.putDouble("loc_alt", settingsLocation.altitude);
             resultBundle.putString("loc_name", settingsLocation.locationName);
             resultBundle.putString("timezone", settingsLocation.timezone);
             resultBundle.putBoolean("loc_auto", settingLocationAuto);
@@ -453,7 +456,7 @@ public final class EditActivity extends AbstractPluginActivity {
             String availableZmanim = "";
 
             JewishDateHelper jewishDateHelper = new JewishDateHelper();
-            jewishDateHelper.setLocation(settingsLocation.locationName, settingsLocation.location.latitude, settingsLocation.location.longitude, settingsLocation.timezone);
+            jewishDateHelper.setLocation(settingsLocation);
             jewishDateHelper.updateDates();
 
             // Get a bundle of the zmanim

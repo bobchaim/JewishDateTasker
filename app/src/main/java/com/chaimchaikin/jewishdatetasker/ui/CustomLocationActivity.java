@@ -16,7 +16,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class CustomLocationActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private Location mLocation;
+    protected Location mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +82,8 @@ public class CustomLocationActivity extends FragmentActivity {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 4.0f));
         final Marker mMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).draggable(false));
 
+        // TODO: make it easier to select a location around already selected marker
+
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng coord) {
@@ -91,6 +93,8 @@ public class CustomLocationActivity extends FragmentActivity {
                 final Intent resultIntent = new Intent();
                 resultIntent.putExtra("lat", coord.latitude);
                 resultIntent.putExtra("lng", coord.longitude);
+                resultIntent.putExtra("lng", 0); // Return 0 for now TODO: get actual elevation
+
 
                 setResult(RESULT_OK, resultIntent);
                 finish();
@@ -106,6 +110,7 @@ public class CustomLocationActivity extends FragmentActivity {
             }
         });
 
+        /*
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
 
             @Override
@@ -125,6 +130,6 @@ public class CustomLocationActivity extends FragmentActivity {
             @Override
             public void onMarkerDragStart(Marker marker) {}
 
-        });
+        });*/
     }
 }

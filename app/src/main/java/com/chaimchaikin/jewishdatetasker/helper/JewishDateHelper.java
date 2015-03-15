@@ -2,6 +2,8 @@ package com.chaimchaikin.jewishdatetasker.helper;
 
 import android.os.Bundle;
 
+import com.chaimchaikin.jewishdatetasker.LocationPoint;
+
 import net.sourceforge.zmanim.ZmanimCalendar;
 import net.sourceforge.zmanim.hebrewcalendar.HebrewDateFormatter;
 import net.sourceforge.zmanim.hebrewcalendar.JewishCalendar;
@@ -29,6 +31,7 @@ public class JewishDateHelper {
     String locationName = "";
     double locationLat = 0;
     double locationLng = 0;
+    double locationAlt = 0;
     TimeZone timeZone;
 
 
@@ -61,12 +64,22 @@ public class JewishDateHelper {
      * @param lng Longitude
      * @param tZ Timezone
      */
-    public void setLocation(String name, double lat, double lng, String tZ) {
+    public void setLocation(String name, double lat, double lng, String tZ, double alt) {
         locationName = name;
         locationLat = lat;
         locationLng = lng;
+        locationAlt = alt;
 
         timeZone = TimeZone.getTimeZone(tZ);
+    }
+
+    /**
+     * Allow to set location from a LocationPoint
+     *
+     * @param lp LocationPoint to set as location
+     */
+    public void setLocation(LocationPoint lp) {
+        setLocation(lp.locationName, lp.location.latitude, lp.location.latitude, lp.timezone, lp.altitude);
     }
 
 
@@ -83,10 +96,8 @@ public class JewishDateHelper {
         Calendar englishDate = Calendar.getInstance();
         englishDate.setTimeZone(timeZone);
 
-        double elevation = 0; // Use 0 as the elevation always for now
-
         // Make a location point
-        GeoLocation location = new GeoLocation(locationName, locationLat, locationLng, elevation, timeZone);
+        GeoLocation location = new GeoLocation(locationName, locationLat, locationLng, locationAlt, timeZone);
 
         // Get a Zmanim Calendar with that location
         ZmanimCalendar zmanimCalendar = new ZmanimCalendar(location);

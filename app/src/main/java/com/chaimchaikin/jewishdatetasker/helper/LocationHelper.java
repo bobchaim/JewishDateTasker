@@ -38,7 +38,7 @@ public class LocationHelper implements LocationListener {
 
     // Variables accessible from outside store current location and details
     public String locationName, timezone;
-    public Double lat, lng;
+    public Double lat, lng, alt;
 
 
     /**
@@ -115,6 +115,7 @@ public class LocationHelper implements LocationListener {
         // Store new location
         lat = location.getLatitude();
         lng = location.getLongitude();
+        alt = location.getAltitude();
 
         // Get timezone for location
         getTimezone();

@@ -81,6 +81,7 @@ public final class FireReceiver extends BroadcastReceiver
             String locName = bundle.getString("loc_name");
             double lat = bundle.getDouble("loc_lat");
             double lng = bundle.getDouble("loc_lng");
+            double alt = bundle.getDouble("loc_alt");
             String timezone = bundle.getString("timezone");
 
             // If auto location is set, try to find a more up to date location
@@ -111,7 +112,7 @@ public final class FireReceiver extends BroadcastReceiver
             }
 
             // Set the location for the JewishDateHelper
-            jewishDate.setLocation(locName, lat, lng, timezone);
+            jewishDate.setLocation(locName, lat, lng, timezone, alt);
 
             // Update the dates
             jewishDate.updateDates();
