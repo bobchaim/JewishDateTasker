@@ -418,7 +418,7 @@ public class JewishDateHelper {
                 "Sof Zman Tfila MGA",
                 "Tzais",
                 "Tzais 72",
-                "Shaah Zmanis GRA",
+                "Shaah Zmanis Gra",
                 "Shaah Zmanis MGA",
                 "Alos 72",
                 "Alos Hashachar",
@@ -449,7 +449,22 @@ public class JewishDateHelper {
                 // Invoking the method
                 try {
                     // Invoke the method and store its value
-                    String value = getTimestampStringFromDate((Date) method.invoke(zmanimCalendar));
+                    Object methodResult =  method.invoke(zmanimCalendar);
+
+                    // Start with an empty value
+                    String value;
+
+                    // Check if we are dealing with a Date
+                    if(methodResult instanceof Date) {
+                        // Get the timestamp for the date as a string
+                        value = getTimestampStringFromDate((Date) methodResult);
+
+                    // Any other data type
+                    } else {
+                        // Get as a string
+                        value = String.valueOf(methodResult);
+                    }
+
 
                     // Put the zman in the bundle
                     zmanim.putString(keyName, value);
