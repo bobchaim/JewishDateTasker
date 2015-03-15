@@ -481,8 +481,8 @@ public final class EditActivity extends AbstractPluginActivity {
                         dateVarPrefix + "*_hebrew\nJewish Date in Hebrew\nThe date in Hebrew (use <b>long</b> or <b>short</b>)",
 
                         // Date parts English
-                        datePartsVarPrefix + "_*\nDate Parts\nDate in English in separate variables<br>Available variables:<br>month<br>day<br>year",
-                        datePartsVarPrefix + "_*_hebrew\nDate Parts in Hebrew\nDate parts in Hebrew<br>Same variables available as above",
+                        datePartsVarPrefix + "*\nDate Parts\nDate in English in separate variables<br>Available variables:<br>month<br>day<br>year",
+                        datePartsVarPrefix + "*_hebrew\nDate Parts in Hebrew\nDate parts in Hebrew<br>Same variables available as above",
 
                         // Zmanim
                         varPrefix + "zmanim_*\nUse these to get Zmanim as a timestamp in seconds-since-the-epoch (can be used as a variable in a Time Context or converted to Date Time)\nAvailable Zmanim:" + availableZmanim,
