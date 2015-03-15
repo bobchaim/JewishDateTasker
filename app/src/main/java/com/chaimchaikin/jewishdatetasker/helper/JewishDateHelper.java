@@ -10,6 +10,8 @@ import net.sourceforge.zmanim.util.GeoLocation;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -389,19 +391,67 @@ public class JewishDateHelper {
         // Make a new bundle of zmanim
         Bundle zmanim = new Bundle();
 
-        // Put zmanim in the bundle
-        zmanim.putString("Sunrise", getTimestampStringFromDate(zmanimCalendar.getSunrise()) );
-        zmanim.putString("Sunset", getTimestampStringFromDate(zmanimCalendar.getSunset()));
-        zmanim.putString("Candle_Lighting", getTimestampStringFromDate(zmanimCalendar.getCandleLighting()));
-        zmanim.putString("Mincha_Ketana", getTimestampStringFromDate(zmanimCalendar.getMinchaKetana()));
-        zmanim.putString("Mincha_Gedolah", getTimestampStringFromDate(zmanimCalendar.getMinchaGedola()) );
-        zmanim.putString("Chatzos", getTimestampStringFromDate(zmanimCalendar.getChatzos()) );
-        zmanim.putString("Sof_Zman_Shma_MGA", getTimestampStringFromDate(zmanimCalendar.getSofZmanShmaMGA()) );
-        zmanim.putString("Sof_Zman_Shma_GRA", getTimestampStringFromDate(zmanimCalendar.getSofZmanShmaGRA()) );
-        zmanim.putString("Plag_Hamincha", getTimestampStringFromDate(zmanimCalendar.getPlagHamincha()) );
-        zmanim.putString("Sof_Zman_Tfila_GRA", getTimestampStringFromDate(zmanimCalendar.getSofZmanTfilaGRA()) );
-        zmanim.putString("Sof_Zman_Tfila_MGA", getTimestampStringFromDate(zmanimCalendar.getSofZmanTfilaMGA()) );
+        // String of possible Zmanim
+        // These must be acceptable methods of a ZmanimCalendar
+        String[] possibleZmanim = {
+                "Sunrise",
+                "Sunset",
+                "Candle Lighting",
+                "Mincha Ketana",
+                "Mincha Gedola",
+                "Chatzos",
+                "Sof Zman Shma MGA",
+                "Sof Zman Shma GRA",
+                "Plag Hamincha",
+                "Sof Zman Tfila GRA",
+                "Sof Zman Tfila MGA",
+                "Tzais",
+                "Tzais 72",
+                "Shaah Zmanis GRA",
+                "Shaah Zmanis MGA",
+                "Alos 72",
+                "Alos Hashachar",
 
+        };
+
+        //zmanimCalendar.get
+
+        // Loop through possible Zmanim
+        // - Check they are valid methods of ZmanimCalendar
+        // - Invoke the method and store its result as a variable
+        for(String zman: possibleZmanim) {
+            // Capitalize first letter of each word (since the methods are in camel case
+            zman = capitalize(zman);
+
+            // Find the name for the key (replace spaces with _)
+            String keyName = zman.replace(" ", "_");
+            // Find the name of the method in the api (remove spaces)
+            String methodName = zman.replace(" ", "");
+
+
+            // Check that this is a valid method
+            Method method;
+            try {
+                // Find the method get + method name e.g. getSunrise
+                method = zmanimCalendar.getClass().getMethod("get" + methodName, null);
+
+                // Invoking the method
+                try {
+                    // Invoke the method and store its value
+                    String value = getTimestampStringFromDate((Date) method.invoke(zmanimCalendar));
+
+                    // Put the zman in the bundle
+                    zmanim.putString(keyName, value);
+
+                // If invoking the method doesn't work just ignore/disregard
+                } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException ignored) {
+                }
+                // If method doesn't work/exist just ignore/disregard
+            } catch (SecurityException | NoSuchMethodException ignored) {
+            }
+        }
+
+        // Return the zmanim
         return zmanim;
     }
 
@@ -414,6 +464,34 @@ public class JewishDateHelper {
     protected String getTimestampStringFromDate(Date date) {
         // Get seconds of the time by getting milliseconds divided by 1000 and return as String
         return String.valueOf(new DateTime(date).getMillis() / 1000);
+    }
+
+    /**
+     * Capitalize the first letter of each word in a string
+     *
+     * @param s String to capitalize
+     * @return String capitalized
+     */
+    protected static String capitalize(String s) {
+        if (s.length() == 0) return s;
+
+        // Split the string in to separate words
+        String[] words = s.split("\\s");
+
+        // Start with an empty string
+        String wholeString = "";
+        int i = 0;
+        // Loop through words in this string
+        for (String word: words) {
+            // Add a space (unless it's the first word)
+            if(i > 0) wholeString += " ";
+            // Add the word to the string with the first letter capital (don't affect the rest of the word)
+            wholeString += word.substring(0, 1).toUpperCase() + word.substring(1);
+            i++;
+        }
+
+        // Return the processed string
+        return wholeString;
     }
 
     /**
