@@ -479,26 +479,26 @@ public final class EditActivity extends AbstractPluginActivity {
                 TaskerPlugin.addRelevantVariableList( resultIntent, new String [] {
 
                         // Full date
-                        dateVarPrefix + "long\nLong Date\n<b>long</b>The date in English (contains \"Eve of\" after sunset) <b>e.g. Eve of 9 Kislev</b>",
-                        dateVarPrefix + "short\nShort Date\n<b>long</b>The date in English (only month and day) <b>e.g. Eve of 9 Kislev</b>",
-                        dateVarPrefix + "*_hebrew\nJewish Date in Hebrew\nThe date in Hebrew (use <b>long</b> or <b>short</b>)",
+                        dateVarPrefix + "long\nLong Date\nThe date in English (contains \"Eve of\" after sunset) <b>e.g. " + jewishDateHelper.vars.getBundle("date").getString("long") + "</b>",
+                        dateVarPrefix + "short\nShort Date\nThe date in English (only month and day) <b>e.g. " + jewishDateHelper.vars.getBundle("date").getString("short") + "</b>",
+                        dateVarPrefix + "*_hebrew\nDate in Hebrew\nThe date in Hebrew (use <b>long</b> or <b>short</b> in place of *)",
 
                         // Date parts English
-                        datePartsVarPrefix + "*\nDate Parts\nDate in English in separate variables<br>Available variables:<br>month<br>day<br>year",
-                        datePartsVarPrefix + "*_hebrew\nDate Parts in Hebrew\nDate parts in Hebrew<br>Same variables available as above",
+                        datePartsVarPrefix + "*\nDate Parts\nDate in English in separate variables<br>Available variables (use in place of *):<br>month<br>day<br>year",
+                        datePartsVarPrefix + "*_hebrew\nDate Parts in Hebrew\nDate parts in Hebrew<br>Same variables available as above (use in place of *)",
 
                         // Zmanim
-                        varPrefix + "zmanim_*\nUse these to get Zmanim as a timestamp in seconds-since-the-epoch (can be used as a variable in a Time Context or converted to Date Time)\nAvailable Zmanim:" + availableZmanim,
+                        varPrefix + "zmanim_*\nZmanim as a timestamp in seconds-since-the-epoch (can be used as a variable in a Time Context or converted to Date Time)\nAvailable Zmanim (use in place of *):" + availableZmanim,
 
                         // Parsha
-                        varPrefix + "parsha\nParsha\nParsha of the week in English (add _hebrew for Hebrew) <b>e.g. Beshalach</b>",
+                        varPrefix + "parsha_*\nParsha\nParsha of the week (use <b>english</b> or <b>hebrew</b> in place of *) <b>e.g. " + jewishDateHelper.vars.getBundle("parsha").getString("english") + "</b>",
 
                         // Sunset
                         varPrefix + "after_sunset\nAfter Sunset\nTrue after sunset (but before midnight) otherwise false <b>e.g. true or false</b>",
 
                         // Extra info
-                        varPrefix + "desc\nDescription\nFull description includes parsha, special dates and relevant times <b>e.g. Parshat Beshalach</b>",
-                        varPrefix + "loc\nLocation\nLocation being used for Zmanim/Date calculations <b>e.g. Brooklyn, New York, USA</b>"
+                        varPrefix + "desc\nDescription\nFull description includes parsha, special dates and relevant times <b>e.g. " + jewishDateHelper.vars.getBundle("misc").getString("desc") + "</b>",
+                        varPrefix + "loc\nLocation\nLocation being used for Zmanim/Date calculations <b>e.g. " + settingsLocation.locationName + "</b>"
 
                     } );
 
