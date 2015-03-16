@@ -74,7 +74,7 @@ public final class FireReceiver extends BroadcastReceiver
             setResultCode(TaskerPlugin.Setting.RESULT_CODE_OK);
 
             // Create a new JewishDateHelper to calculate times and dates
-            JewishDateHelper jewishDate = new JewishDateHelper();
+            JewishDateHelper jewishDate = new JewishDateHelper(context);
 
             // Initialize Variables to values in settings
             boolean autoLocation = bundle.getBoolean("loc_auto", false);

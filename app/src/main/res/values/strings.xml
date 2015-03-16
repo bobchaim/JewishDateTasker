@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Jewish Automator Tasker Plugin</string>
+    <string name="app_name">Jewish Tasker Plugin</string>
     <string name="plugin_name">Jewish Tasker</string>
     <string name="use_automatic_location">Automatic Location</string>
     <string name="current_location">Use current location</string>
@@ -10,4 +10,11 @@
     <string name="finding_location">Finding current location…</string>
     <string name="showing_times_for">Showing times for:</string>
 
+    <string name="eve_prefix_english">Eve of </string>
+    <string name="eve_prefix_hebrew">ליל </string>
+    <string name="night">Night</string>
+    <string name="day">Day</string>
+    <string name="candle_lighting">Candle Lighting</string>
+    <string name="parshas">Parshas</string>
+    <string name="of_chanukah">%1$s %2$s of Chanukah</string>
 </resources>

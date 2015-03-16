@@ -1,10 +1,12 @@
 package com.chaimchaikin.jewishdatetasker.helper;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.chaimchaikin.jewishdatetasker.Constants;
 import com.chaimchaikin.jewishdatetasker.LocationPoint;
+import com.chaimchaikin.jewishdatetasker.R;
 
 import net.sourceforge.zmanim.ZmanimCalendar;
 import net.sourceforge.zmanim.hebrewcalendar.HebrewDateFormatter;
@@ -36,6 +38,7 @@ public class JewishDateHelper {
     double locationAlt = 0;
     TimeZone timeZone;
 
+    Context context;
 
     // Setup a Bundle for storing all of our vars
     public Bundle vars = new Bundle();
@@ -46,7 +49,9 @@ public class JewishDateHelper {
     HebrewDateFormatter dateFormatterEnglish;
 
 
-    public JewishDateHelper() {
+    public JewishDateHelper(Context ctx) {
+        context = ctx;
+
         /**
          * Create formatters for the date
          */
@@ -193,8 +198,8 @@ public class JewishDateHelper {
         // Get the short date (just day of month and month name)
         String shortDate =  jewishDate.getJewishDayOfMonth() + " " + dateFormatterEnglish.formatMonth(jewishDate);
 
-        // Get the long date (add possible "eve" prefix to short date)
-        String longDate = getEvePrefixEnglish(afterSunset) + shortDate;
+        // Get the long date (add possible "eve" prefix to short date + year)
+        String longDate = getEvePrefixEnglish(afterSunset) + shortDate + " " + jewishDate.getJewishYear();
 
         // Make English dates available as variables
         dates.putString("short", shortDate);
@@ -234,8 +239,7 @@ public class JewishDateHelper {
     }
 
     /**
-     * Get a hebrew/english prefix to append to the date if we are after sunset
-     * TODO: replace with string
+     * Get hebrew/english prefixes to append to the date if we are after sunset
      */
 
     /**
@@ -243,7 +247,7 @@ public class JewishDateHelper {
      * @return English prefix if after sunset
      */
     protected String getEvePrefixEnglish(boolean afterSunset) {
-        if(afterSunset) return "Eve of ";
+        if(afterSunset) return getResourceString(R.string.eve_prefix_english) + " ";
         else return "";
     }
 
@@ -252,7 +256,7 @@ public class JewishDateHelper {
      * @return Hebrew prefix if after sunset
      */
     protected String getEvePrefixHebrew(boolean afterSunset) {
-        if(afterSunset) return "ליל ";
+        if(afterSunset) return getResourceString(R.string.eve_prefix_hebrew) + " ";
         else return "";
     }
 
@@ -302,9 +306,9 @@ public class JewishDateHelper {
      */
     protected String getDayOrNight(boolean afterSunset) {
         if(afterSunset) {
-            return "Night";
+            return getResourceString(R.string.night);
         } else {
-            return "Day";
+            return getResourceString(R.string.day);
         }
     }
 
@@ -334,7 +338,7 @@ public class JewishDateHelper {
 
         // Show candle lighting only on 6th day of Hebrew Week (after midnight)
         if(jewishDate.getDayOfWeek() == 6 && !afterSunset) {
-            descriptionString += "Candle Lighting: " + candleLightingTime;
+            descriptionString += getResourceString(R.string.candle_lighting) + ": " + candleLightingTime;
             descriptionString += CD;
         }
 
@@ -342,7 +346,7 @@ public class JewishDateHelper {
         String englishParsha = parshaBundle.getString("english");
 
         // Add the parsha to the description string
-        descriptionString += "Parshas " + englishParsha;
+        descriptionString += getResourceString(R.string.parshas) + " " + englishParsha;
 
 
         // Yom Tov or fast day
@@ -357,11 +361,13 @@ public class JewishDateHelper {
             descriptionString += CD;
         }
 */
+
         // Chanukah
         if (jewishDate.isChanukah()) {
             descriptionString += CD;
+            // TODO: Verify this works
             // The day number of Chanukah + suffix for that number (e.g. nd for 2nd) + day/night + / of Chanukah
-            descriptionString += jewishDate.getDayOfChanukah() + appendInt(jewishDate.getDayOfChanukah()) + " " + getDayOrNight(afterSunset) +  " of Chanukah";
+            descriptionString += String.format(getResourceString(R.string.of_chanukah), jewishDate.getDayOfChanukah() + appendInt(jewishDate.getDayOfChanukah()), getDayOrNight(afterSunset));
         }
         // Rosh Chodesh
         if (jewishDate.isRoshChodesh()) {
@@ -573,6 +579,15 @@ public class JewishDateHelper {
                 Log.d(Constants.LOG_TAG, "- " + key2 + ": " + String.valueOf(vars.getBundle(key).get(key2)));
             }
         }
+    }
+
+    /**
+     * Wrapper to get a string from resources
+     * @param id of resource string
+     * @return String
+     */
+    protected String getResourceString(int id) {
+        return context.getResources().getString(id);
     }
 
 }

@@ -455,7 +455,7 @@ public final class EditActivity extends AbstractPluginActivity {
             // Loop through available zmanim and add them to one string
             String availableZmanim = "";
 
-            JewishDateHelper jewishDateHelper = new JewishDateHelper();
+            JewishDateHelper jewishDateHelper = new JewishDateHelper(getApplicationContext());
             jewishDateHelper.setLocation(settingsLocation);
             jewishDateHelper.updateDates();
 
