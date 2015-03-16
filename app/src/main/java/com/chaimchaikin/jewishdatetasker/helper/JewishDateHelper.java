@@ -454,7 +454,8 @@ public class JewishDateHelper {
             Method method;
             try {
                 // Find the method get + method name e.g. getSunrise
-                method = zmanimCalendar.getClass().getMethod("get" + methodName, (Class)null);
+                //noinspection NullArgumentToVariableArgMethod
+                method = zmanimCalendar.getClass().getMethod("get" + methodName, null);
 
                 // Invoking the method
                 try {
