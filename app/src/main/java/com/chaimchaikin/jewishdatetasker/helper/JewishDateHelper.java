@@ -1,7 +1,9 @@
 package com.chaimchaikin.jewishdatetasker.helper;
 
 import android.os.Bundle;
+import android.util.Log;
 
+import com.chaimchaikin.jewishdatetasker.Constants;
 import com.chaimchaikin.jewishdatetasker.LocationPoint;
 
 import net.sourceforge.zmanim.ZmanimCalendar;
@@ -141,11 +143,14 @@ public class JewishDateHelper {
             All other variables
          */
 
+        // Store parsha bundle (as we need it for the Description and for its own bundle)
+        Bundle parshaBundle = getParsha(jewishDate, englishDate);
+
         // Store all misc vars in separate bundle
         Bundle misc = new Bundle();
 
         // Description of date
-        misc.putString("desc", getDescription(jewishDate, englishDate, zmanimCalendar, afterSunset));
+        misc.putString("desc", getDescription(jewishDate, zmanimCalendar, afterSunset, parshaBundle));
 
         // If it's currently after sunset
         misc.putBoolean("afterSunset", afterSunset);
@@ -155,11 +160,11 @@ public class JewishDateHelper {
            Store the variables
          */
 
-        // Parsha
-        vars.putBundle("parsha", getParsha(jewishDate, englishDate));
-
         // All date possibilities
         vars.putBundle("date", getDates(jewishDate, afterSunset));
+
+        // Parsha
+        vars.putBundle("parsha", parshaBundle);
 
         // Date parts
         vars.putBundle("dp", getDateParts(jewishDate));
@@ -169,6 +174,9 @@ public class JewishDateHelper {
 
         // Zmanim
         vars.putBundle("zmanim", getZmanim(zmanimCalendar));
+
+        // For debug purposes
+        logVars(vars);
     }
 
     /**
@@ -217,10 +225,10 @@ public class JewishDateHelper {
         dateParts.putString("day", String.valueOf(jewishDate.getJewishDayOfMonth()));
         dateParts.putString("year", String.valueOf(jewishDate.getJewishYear()));
 
-        // Hebrew date parts TODO: get day and year in hebrew
+        // Hebrew date parts
         dateParts.putString("month_hebrew", dateFormatterHebrew.formatMonth(jewishDate));
-        //dateParts.putString("day_hebrew", String.valueOf(jewishDate.getJewishDayOfMonth()));
-        //dateParts.putString("year_hebrew", String.valueOf(jewishDate.getJewishYear()));
+        dateParts.putString("day_hebrew", dateFormatterHebrew.formatHebrewNumber(jewishDate.getJewishDayOfMonth()));
+        dateParts.putString("year_hebrew", dateFormatterHebrew.formatHebrewNumber(jewishDate.getJewishYear()));
 
         return dateParts;
     }
@@ -307,12 +315,12 @@ public class JewishDateHelper {
      * - Rosh Chodesh, Yom Tov, Omer etc. (if present)
      *
      * @param jewishDate current Jewish Date
-     * @param englishDate current English Date
      * @param zmanimCalendar a ZmanimCalendar with the date to get zmanim for
      * @param afterSunset are we after sunset (but before midnight)
+     * @param parshaBundle Bundle containing parsha information
      * @return String with description of date
      */
-    protected String getDescription(JewishCalendar jewishDate, Calendar englishDate, ZmanimCalendar zmanimCalendar, boolean afterSunset) {
+    protected String getDescription(JewishCalendar jewishDate, ZmanimCalendar zmanimCalendar, boolean afterSunset, Bundle parshaBundle) {
 
         // Initialize description string
         String descriptionString = "";
@@ -322,14 +330,16 @@ public class JewishDateHelper {
         SimpleDateFormat candleLightingFormat = new SimpleDateFormat("h:m", Locale.US);
         String candleLightingTime = candleLightingFormat.format(candleLighting);
 
+        String CD = ", ";
+
         // Show candle lighting only on 6th day of Hebrew Week (after midnight)
         if(jewishDate.getDayOfWeek() == 6 && !afterSunset) {
             descriptionString += "Candle Lighting: " + candleLightingTime;
-            descriptionString += ", ";
+            descriptionString += CD;
         }
 
         // Get the english parsha
-        String englishParsha = getParsha(jewishDate, englishDate).getString("english");
+        String englishParsha = parshaBundle.getString("english");
 
         // Add the parsha to the description string
         descriptionString += "Parshas " + englishParsha;
@@ -337,30 +347,30 @@ public class JewishDateHelper {
 
         // Yom Tov or fast day
         if (jewishDate.isYomTov() || jewishDate.isTaanis()) {
-            descriptionString += ", ";
+            descriptionString += CD;
 
             descriptionString += dateFormatterEnglish.formatYomTov(jewishDate);
         }
 /*
         // TODO: On a fast day show fast starting/ending times
         if(jewishDate.isTaanis()) {
-            descriptionString += ", ";
+            descriptionString += CD;
         }
 */
         // Chanukah
         if (jewishDate.isChanukah()) {
-            descriptionString += ", ";
+            descriptionString += CD;
             // The day number of Chanukah + suffix for that number (e.g. nd for 2nd) + day/night + / of Chanukah
             descriptionString += jewishDate.getDayOfChanukah() + appendInt(jewishDate.getDayOfChanukah()) + " " + getDayOrNight(afterSunset) +  " of Chanukah";
         }
         // Rosh Chodesh
         if (jewishDate.isRoshChodesh()) {
-            descriptionString += ", ";
+            descriptionString += CD;
             descriptionString += dateFormatterEnglish.formatRoshChodesh(jewishDate);
         }
         // Omer
         if(jewishDate.getDayOfOmer() > 0){
-            descriptionString += ", ";
+            descriptionString += CD;
             descriptionString += dateFormatterHebrew.formatOmer(jewishDate);
         }
 
@@ -379,7 +389,7 @@ public class JewishDateHelper {
 
         // Get the parsha in hebrew and english
         String englishParsha = dateFormatterEnglish.formatParsha(jewishDateShabbos);
-        String hebrewParsha = jewishDateShabbos.toString();
+        String hebrewParsha = dateFormatterHebrew.formatParsha(jewishDateShabbos);
 
         // Make a new bundle for the parsha
         Bundle parsha = new Bundle();
@@ -444,7 +454,7 @@ public class JewishDateHelper {
             Method method;
             try {
                 // Find the method get + method name e.g. getSunrise
-                method = zmanimCalendar.getClass().getMethod("get" + methodName, null);
+                method = zmanimCalendar.getClass().getMethod("get" + methodName, (Class)null);
 
                 // Invoking the method
                 try {
@@ -548,5 +558,20 @@ public class JewishDateHelper {
         }
     }
 
+    /**
+     * Loops through a bundle and then through each bundle inside and logs the values
+     *
+     * @param vars Bundle of vars (that contains a bundle inside)
+     */
+    protected void logVars(Bundle vars) {
+        for (String key: vars.keySet()) {
+
+            Log.d(Constants.LOG_TAG, key);
+
+            for(String key2: vars.getBundle(key).keySet()) {
+                Log.d(Constants.LOG_TAG, "- " + key2 + ": " + String.valueOf(vars.getBundle(key).get(key2)));
+            }
+        }
+    }
 
 }
